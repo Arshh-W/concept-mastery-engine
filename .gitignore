@@ -1,0 +1,13 @@
+.venv/
+
+.env
+__pycache__/
+
+*.out
+
+node_modules/
+dist/
+.eslintcache
+
+.DS_Store
+.vscode/
