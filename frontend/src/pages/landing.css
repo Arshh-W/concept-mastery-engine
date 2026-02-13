@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 0;
+
+    background: rgba(8, 15, 40, 0.85);
+    backdrop-filter: blur(8px);       
+}
+.navbar p {
+    margin: 0;
+}
+
+.navbar .logo {
+    color: #facc15;
+    font-family: 'Anton', sans-serif;
+    font-size: 40px;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.navbar .tagline {
+    color: #22d3ee;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+    
+}
+
+
+
+.hero {
+    min-height: 100vh;
+
+    background:
+        linear-gradient(rgba(8, 15, 40, 0.92), rgba(8, 15, 40, 0.96)),
+        url("../assets/bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    color: white;
+}
+
+
+
+.hero h1 {
+    font-size: 60px;
+    font-family: "Bebas Neue", sans-serif;
+    letter-spacing: 2px;
+}
+
+.hero h2 {
+    font-size: 40px;
+    font-family: "Bebas Neue", sans-serif;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+.hero p {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+
+.primary-btn {
+    background-color: #facc15;
+    color: #000;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(250, 204, 21, 0.4);
+}
+
+
+
+.secondary-btn {
+    background-color: transparent;
+    color: #facc15;
+    border: 2px solid #facc15;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.secondary-btn:hover {
+    background-color: #facc15;
+    color: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(250, 204, 21, 0.4);
+}
