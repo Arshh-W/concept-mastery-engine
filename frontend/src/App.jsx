@@ -1,10 +1,11 @@
-import CodeConquer from "./pages/landing"
+import CodeConquer from './pages/landing.jsx';
 
 function App() {
-  return (<>
-    <CodeConquer />
-  </>)
-
+  return (
+    <>
+    <CodeConquer/>
+    </>
+  );
 }
 
-export default App
+export default App;

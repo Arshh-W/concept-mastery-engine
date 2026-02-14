@@ -5,12 +5,5 @@
 }
 
 body {
-  background-color: #0b0f1f;   
-  font-family: 'Poppins', sans-serif;
-  color: white;
-}
-
-.container {
-  width: 100%;
-  min-height: 100vh;
+  margin: 0;
 }
