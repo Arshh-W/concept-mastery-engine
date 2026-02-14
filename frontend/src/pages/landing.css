@@ -1,188 +1,188 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
+/* ye root bahaut km baar use kra hai to km hi chize rkhi hai */
+
+:root {
+    --primary: #facc15;
+    --secondary: #22d3ee;
+    --bg-dark: #080f28;
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /*ye thodi si smoothness ke liye hai */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: white;
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
 
 
 .navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0px 0;
-
-    background: rgba(8, 15, 40, 0.85);
-    backdrop-filter: blur(8px);       
-}
-.navbar p {
-    margin: 0;
+    padding: 1rem 0;
+    background: rgba(8, 15, 40, 0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .navbar .logo {
-    color: #facc15;
+    color: var(--primary);
     font-family: 'Anton', sans-serif;
-    font-size: 40px;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     letter-spacing: 2px;
-    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
 }
 
 .navbar .tagline {
-    color: #22d3ee;
+    color: var(--secondary);
     font-family: "Bebas Neue", sans-serif;
-    font-size: 18px;
-    letter-spacing: 3px;
-    margin-bottom: 5px;
-    
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
 }
-
-
 
 
 .hero {
     min-height: 100vh;
-    position: relative;   
-
-    background:
-        linear-gradient(rgba(8, 15, 40, 0.654), rgba(8, 15, 40, 0.654)),
-        url("../assets/BG2.webp");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
+    justify-content: center; 
     align-items: center;
-
-    padding-top: 150px;            
     text-align: center;
-    color: white;
+    padding: 20px;
+    background: 
+        linear-gradient(rgba(8, 15, 40, 0.7), rgba(8, 15, 40, 0.7)),
+        url("../assets/BG2.webp") center/cover no-repeat;
 }
+
 .hero h1 {
-    font-size: 60px;
+    font-size: clamp(3rem, 10vw, 5rem);
     font-family: "Bebas Neue", sans-serif;
-    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 0.5rem;
 }
 
 .hero h2 {
-    font-size: 40px;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     font-family: "Bebas Neue", sans-serif;
-    opacity: 0.9;
-    margin-top: 10px;
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
 }
 
 .hero p {
-    margin-top: 15px;
-    margin-bottom: 30px;
-    font-size: 18px;
+    max-width: 600px;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
     opacity: 0.8;
-    margin-bottom: 170px;
 }
 
-
+#yo{
+    border: 3px solid whitesmoke;
+    border-radius: 60px;
+    padding: 10px 20px;
+}
 
 .hero-buttons {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
+.primary-btn, .secondary-btn {
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+}
 
 .primary-btn {
-    background-color: #facc15;
-    color: #000;
+    background: var(--primary);
     border: none;
-    padding: 14px 32px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
+    color: #000;
 }
-
-.primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(250, 204, 21, 0.4);
-}
-
-
 
 .secondary-btn {
-    background-color: transparent;
-    color: #facc15;
-    border: 2px solid #facc15;
-    padding: 14px 32px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
 }
 
-.secondary-btn:hover {
-    background-color: #facc15;
+.primary-btn:hover, .secondary-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.4);
+    background: var(--primary);
     color: #000;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(250, 204, 21, 0.4);
 }
 
 .features {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 60px;
-
-    padding: 120px 0;
-    background-color: #050d22;
-
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 100px 20px;
     max-width: 1200px;
-    margin: 0 auto;   
+    margin: 0 auto;
 }
-
-
-
-
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 50px 40px;
-    width: 380px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px;
     text-align: center;
-    backdrop-filter: blur(8px);
-    transition: 0.3s ease;
-}
-.feature-card img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
 }
 
 .feature-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--secondary);
     transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-
-
-.feature-card h3 {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 28px;
+.feature-card img {
+    width: 60px;
+    height: 60px;
     margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px var(--secondary));
 }
 
-.feature-card p {
-    font-size: 15px;
-    opacity: 0.8;
-    line-height: 1.6;
-    margin: 0;
+.footer {
+    background-color: #050d22;
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.footer h3 {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 32px;
+    color: var(--primary); /* The yellow color in the root */
+    margin-bottom: 10px;
+}
 
+.contact-link:hover {
+    text-shadow: 0 0 10px var(--secondary);
+    transform: scale(1.05);
+}
+
+.footer-bottom {
+    margin-top: 40px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}

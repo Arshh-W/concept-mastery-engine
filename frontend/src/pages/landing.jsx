@@ -1,4 +1,3 @@
-import bg from "../assets/bg.png";
 import dbms from "../assets/dbms.png";
 import os from "../assets/os.png";
 import './landing.css'
@@ -19,7 +18,7 @@ export default function CodeConquer() {
         <h1>Master OS & DBMS</h1>
         <h2>Through Missions and Boss Battles</h2>
 
-        <p>
+        <p id="yo">
           Complete challenges. Earn XP. Conquer concepts.
         </p>
 
@@ -51,6 +50,16 @@ export default function CodeConquer() {
 
       </div>
 
+      <footer className="footer">
+          <div className="contact-info">
+            <h3>Need Backup?</h3>
+            <p>Please reach out to the masters.</p>
+            <p>Contact no.= [Likh dio jo likhna hai]</p>
+          </div>
+          <div className="footer-bottom">
+            <p>&copy; 2026 CodeConquer. All Rights Reserved.</p>
+          </div>
+      </footer>
 
 
     </div>
