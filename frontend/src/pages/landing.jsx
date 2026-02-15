@@ -8,9 +8,10 @@ export default function CodeConquer() {
         <div className="hero">
             <div className="hero-left">
                 <h1>
-                    Master <span>Operating Systems</span> <br />
-                    & <span>Database Systems</span>.
+                    Conquer <span>Core Concepts</span> <br />
+                    Build Real Skills.
                 </h1>
+
 
                 <p>
                     Go from zero to hero, build hands-on projects and gain practical skills.
@@ -19,7 +20,27 @@ export default function CodeConquer() {
             </div>
 
             <div className="hero-right">
-                <img src={heroImage} alt="hero" />
+                <div className="image-wrapper">
+                    <img src={heroImage} alt="hero" />
+
+                    <div className="comment c1" style={{ animationDelay: "0.2s" }}>
+                        🚀 Complete Missions, Not Just Lessons
+                    </div>
+
+                    <div className="comment c2" style={{ animationDelay: "0.8s" }}>
+                        🎯 Master Core Concepts Deeply
+                    </div>
+
+                    <div className="comment c3" style={{ animationDelay: "1.4s" }}>
+                        ⚔️ Level Up Your Skills
+                    </div>
+
+                    <div className="comment c4" style={{ animationDelay: "2s" }}>
+                        🏆 Build Interview-Ready Confidence
+                    </div>
+
+                </div>
+
             </div>
         </div>
 

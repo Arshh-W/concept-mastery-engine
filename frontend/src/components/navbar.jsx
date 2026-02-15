@@ -10,7 +10,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="logo-circle">
-                        <span>⟡</span>
+                        <span>CC</span>
                     </div>
 
                     <div className="brand">
@@ -20,14 +20,17 @@ export default function Navbar() {
                 </div>
 
                 <div className="nav-right">
-                    <a href="#">Interview Practice</a>
+                    
 
-                    <a href="#" className="badge-link">
+                    <button  className="badge-link">
                         Courses
                         <span className="new-badge">New</span>
-                    </a>
+                    </button>
 
-                    <a href="#">Sign In</a>
+                    <button  className="badge-link">
+                        Sign in
+                        
+                    </button>
 
                     <div className="dots">⋮</div>
                 </div>

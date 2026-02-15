@@ -26,7 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #facc15;
+    color: #ff8400;
     font-weight: bold;
 }
 .brand {
@@ -39,7 +39,7 @@
     color: white;
 }
 .brand-accent {
-    color: #facc15;
+    color: #ff8400;
 }
 .nav-right {
     display: flex;
@@ -55,15 +55,24 @@
     transition: 0.3s;
 }
 .nav-right a:hover {
-    color: #facc15;
+    color: #ff8400;
 }
 .badge-link {
     display: flex;
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
     align-items: center;
     gap: 6px;
+    font-size: 15px;
+}
+.badge-link:hover{
+    color: #ff8400;
+    cursor: pointer;
+
 }
 .new-badge {
-    background: #facc15;
+    background: #ff8400;
     color: black;
     font-size: 10px;
     padding: 2px 7px;
