@@ -1,11 +1,17 @@
 import Navbar from '../components/navbar.jsx';
-import heroImage from "../assets/guy.webp";
 import hero1Image from "../assets/guy1.png";
+import { motion } from 'framer-motion';
 
 import './landing.css';
 export default function CodeConquer() {
     return (<div>
         <Navbar />
+        <motion.div
+        initial={{ opacity: 0, x: -20 }}    
+        animate={{ opacity: 1, x: 0 }}      
+        exit={{ opacity: 0, x: 20 }}        
+        transition={{ duration: 0.5 }}      
+        >
         <div className="hero">
             <div className="hero-left">
                 <h1>
@@ -47,6 +53,7 @@ export default function CodeConquer() {
 
             </div>
         </div>
+         </motion.div>
 
 
     </div>);
