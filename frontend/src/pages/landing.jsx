@@ -1,5 +1,6 @@
 import Navbar from '../components/navbar.jsx';
 import heroImage from "../assets/guy.webp";
+import hero1Image from "../assets/guy1.png";
 
 import './landing.css';
 export default function CodeConquer() {
@@ -21,21 +22,24 @@ export default function CodeConquer() {
 
             <div className="hero-right">
                 <div className="image-wrapper">
-                    <img src={heroImage} alt="hero" />
+                    
+                    <img src={hero1Image} alt="hero" />
+                    <div className="comment c5 primary" style={{ animationDelay: "0.2s" }}>😍 Why Code Conquer?</div>
 
-                    <div className="comment c1" style={{ animationDelay: "0.2s" }}>
+
+                    <div className="comment c1" style={{ animationDelay: "0.8s" }}>
                         🚀 Complete Missions, Not Just Lessons
                     </div>
 
-                    <div className="comment c2" style={{ animationDelay: "0.8s" }}>
+                    <div className="comment c2" style={{ animationDelay: "1.4s" }}>
                         🎯 Master Core Concepts Deeply
                     </div>
 
-                    <div className="comment c3" style={{ animationDelay: "1.4s" }}>
+                    <div className="comment c3" style={{ animationDelay: "2s" }}>
                         ⚔️ Level Up Your Skills
                     </div>
 
-                    <div className="comment c4" style={{ animationDelay: "2s" }}>
+                    <div className="comment c4" style={{ animationDelay: "2.6s" }}>
                         🏆 Build Interview-Ready Confidence
                     </div>
 

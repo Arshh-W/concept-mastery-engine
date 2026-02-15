@@ -1,4 +1,5 @@
 import './navbar.css';
+import logoImage from "../assets/logo.png";
 export default function Navbar() {
     return (
         <div>
@@ -10,7 +11,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="logo-circle">
-                        <span>CC</span>
+                        <img src={logoImage} alt="hero" />
                     </div>
 
                     <div className="brand">
@@ -25,6 +26,10 @@ export default function Navbar() {
                     <button  className="badge-link">
                         Courses
                         <span className="new-badge">New</span>
+                    </button>
+                    <button  className="badge-link">
+                        About Us
+                        
                     </button>
 
                     <button  className="badge-link">

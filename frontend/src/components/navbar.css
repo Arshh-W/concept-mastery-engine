@@ -21,13 +21,18 @@
 .logo-circle {
     width: 38px;
     height: 38px;
-    background: #142030;
-    border-radius: 50%;
+    
+    
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ff8400;
     font-weight: bold;
+}
+.logo-circle img{
+    border-radius: 50%;
+    width: 50px;
+    height: 40px;
 }
 .brand {
     display: flex;
