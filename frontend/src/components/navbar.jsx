@@ -27,25 +27,19 @@ export default function Navbar() {
                     <Link to="/" className="badge-link">
                         Home
                     </Link>
-
-                    <button  className="badge-link">
+                    
+                    <Link to="/roadmap" className="badge-link">
                         Courses
                         <span className="new-badge">New</span>
-                    </button>
-
-                    <Link to="/roadmap" className="badge-link">
-                        Roadmap
                     </Link>
 
-                    <button  className="badge-link">
-                        About Us
-                        
-                    </button>
+                    <Link to="/about" className="badge-link">
+                        About us
+                    </Link>
 
-                    <button  className="badge-link">
-                        Sign in
-                        
-                    </button>
+                    <Link to="/sign" className="badge-link">
+                        Sign-in
+                    </Link>
 
                     <div className="dots">⋮</div>
                 </div>

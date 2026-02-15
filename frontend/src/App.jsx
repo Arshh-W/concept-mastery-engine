@@ -3,6 +3,9 @@ import Navbar from './components/navbar';
 import { AnimatePresence } from 'framer-motion';  
 import CodeConquer from './pages/landing.jsx';
 import Roadmap from './pages/Roadmap.jsx';
+import Os from './pages/os.jsx';
+import About from './pages/About.jsx';
+import Sign from './pages/Sign.jsx';
 
 function App() {
   return (
@@ -11,6 +14,9 @@ function App() {
       <Routes>
         <Route path="/" element={<CodeConquer />} />
         <Route path="/roadmap" element={<Roadmap />} />
+        <Route path="/os" element={<Os/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/sign" element={<Sign/>}/>
       </Routes>
       </AnimatePresence>
     </>
