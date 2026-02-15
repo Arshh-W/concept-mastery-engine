@@ -1,6 +1,7 @@
 import Navbar from "../components/navbar.jsx";
 import hero1Image from "../assets/guy1.png";
 import { motion } from "framer-motion";
+import { Link } from 'react-router-dom';
 import "./landing.css";
 
 export default function CodeConquer() {
@@ -27,7 +28,9 @@ export default function CodeConquer() {
               Go from zero to hero, build hands-on projects and gain practical skills.
             </p>
 
-            <button className="cta-btn">Explore Courses</button>
+            <Link to="/roadmap" className="cta-btn">
+              Explore Courses
+            </Link>
           </div>
 
           <div className="hero-right">

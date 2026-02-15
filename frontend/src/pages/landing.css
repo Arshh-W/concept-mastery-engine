@@ -151,6 +151,7 @@ body {
   font-size: 15px;
   cursor: pointer;
   transition: 0.3s ease;
+  text-decoration: none;
 }
 
 .cta-btn:hover {
