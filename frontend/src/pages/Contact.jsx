@@ -1,3 +1,4 @@
+import Navbar from "../components/navbar.jsx";
 import { motion } from "framer-motion";
 import "./Feedback.css";
 
@@ -8,6 +9,7 @@ export default function Contact() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
+      <Navbar/>
       <div className="form-container">
         <h1>Contact <span>The Core</span></h1>
         <p>Direct line to the CodeConquer development team.</p>

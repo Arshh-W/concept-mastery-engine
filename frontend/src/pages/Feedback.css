@@ -1,37 +1,54 @@
+
 .form-page {
   min-height: 100vh;
+  background: #000;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
-  padding: 100px 20px;
+  align-items: center;
+  padding: 120px 20px;
 }
+
 
 .form-container {
   width: 100%;
   max-width: 600px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 50px;
+
+  background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(15px);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+
+  border-radius: 20px;
+  border: 1px solid rgba(255, 140, 0, 0.6);
+
+  box-shadow:
+    0 0 60px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(255, 140, 0, 0.2);
+
+  transition: 0.3s ease;
 }
+
 
 .form-container h1 {
   font-family: "Bebas Neue", sans-serif;
   font-size: 3rem;
   letter-spacing: 4px;
+  color: #fff;
   margin-bottom: 10px;
 }
 
-.form-container h1 span { color: var(--secondary); }
+.form-container h1 span {
+  color: #ff8c00;
+  text-shadow:
+    0 0 15px rgba(255, 140, 0, 0.9),
+    0 0 35px rgba(255, 140, 0, 0.6);
+}
+
 
 .cyber-form {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 
 .input-group label {
@@ -39,77 +56,149 @@
   font-family: "Bebas Neue", sans-serif;
   letter-spacing: 2px;
   margin-bottom: 8px;
-  color: #fff;
+  color: #ccc;
 }
 
-.cyber-form input, .cyber-form textarea, .cyber-form select {
+
+.cyber-form textarea {
   width: 100%;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 14px;
+  min-height: 100px;
+
+  background: rgba(0, 0, 0, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
+
   color: #fff;
-  transition: 0.3s;
+  font-size: 0.95rem;
+  resize: none;
+
+  transition: 0.3s ease;
 }
 
-.cyber-form input:focus, .cyber-form textarea:focus {
-  border-color: var(--secondary);
+.cyber-form textarea:focus {
   outline: none;
-  box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+  border-color: #ff8c00;
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
 }
 
-.submit-btn {
-  background: var(--secondary);
-  color: #000;
-  border: none;
-  padding: 15px;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.submit-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 20px rgba(34, 211, 238, 0.4);
-}
 
 .star-rating {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 }
 
 .star-btn {
   background: transparent;
   border: none;
-  outline: none;
   cursor: pointer;
   font-size: 2.5rem;
   padding: 0;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .star-btn:hover {
   transform: scale(1.2);
 }
 
-
 .star-btn.off {
   color: rgba(255, 255, 255, 0.2);
 }
 
 .star-btn.on {
-  color: var(--secondary);
-  text-shadow: 0 0 15px var(--secondary), 0 0 30px var(--secondary);
+  color: #ff8c00;
+  text-shadow:
+    0 0 15px rgba(255, 140, 0, 0.9),
+    0 0 30px rgba(255, 140, 0, 0.7);
 }
 
+
 .rating-text {
-  margin-top: 15px;
+  margin-top: 12px;
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
-  color: var(--secondary);
+  color: #ff8c00;
   letter-spacing: 1px;
+}
+
+
+.submit-btn {
+  margin-top: 10px;
+
+  background: linear-gradient(90deg, #ff8c00, #ffa500);
+  color: #000;
+
+  border: none;
+  padding: 16px;
+
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+
+  border-radius: 50px;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.form-container p {
+  margin-top: 8px;
+  margin-bottom: 25px;
+  color: #aaa;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.input-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.input-row .input-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.cyber-form input,
+.cyber-form select {
+  width: 100%;
+  padding: 14px;
+
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+
+  color: #fff;
+  font-size: 0.95rem;
+
+  transition: 0.3s ease;
+}
+
+.cyber-form input:focus,
+.cyber-form select:focus {
+  outline: none;
+  border-color: #ff8c00;
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+}
+
+
+.cyber-form select {
+  appearance: none;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .input-row {
+    flex-direction: column;
+  }
 }

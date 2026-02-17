@@ -1,3 +1,4 @@
+import Navbar from "../components/navbar.jsx";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import "./Feedback.css"; 
@@ -8,6 +9,7 @@ export default function Feedback() {
 
   return (
     <motion.div className="form-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <Navbar/>
       <div className="form-container">
         <h1>Transmit <span>Feedback</span></h1>
         
