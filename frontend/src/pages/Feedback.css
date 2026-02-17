@@ -1,0 +1,115 @@
+.form-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+  padding: 100px 20px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.form-container h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 3rem;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+
+.form-container h1 span { color: var(--secondary); }
+
+.cyber-form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.cyber-form input, .cyber-form textarea, .cyber-form select {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.cyber-form input:focus, .cyber-form textarea:focus {
+  border-color: var(--secondary);
+  outline: none;
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+}
+
+.submit-btn {
+  background: var(--secondary);
+  color: #000;
+  border: none;
+  padding: 15px;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(34, 211, 238, 0.4);
+}
+
+.star-rating {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 2.5rem;
+  padding: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+
+.star-btn.off {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.star-btn.on {
+  color: var(--secondary);
+  text-shadow: 0 0 15px var(--secondary), 0 0 30px var(--secondary);
+}
+
+.rating-text {
+  margin-top: 15px;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  color: var(--secondary);
+  letter-spacing: 1px;
+}

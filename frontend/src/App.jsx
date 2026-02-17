@@ -6,6 +6,8 @@ import Roadmap from './pages/Roadmap.jsx';
 import Os from './pages/os.jsx';
 import About from './pages/About.jsx';
 import Sign from './pages/Sign.jsx';
+import Feedback from './pages/Feedback.jsx';
+import Contact from './pages/Contact.jsx';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/os" element={<Os/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/sign" element={<Sign/>}/>
+        <Route path="/feedback" element={<Feedback/>}/>
+        <Route path="/contact" element={<Contact/>}/>
       </Routes>
       </AnimatePresence>
     </>

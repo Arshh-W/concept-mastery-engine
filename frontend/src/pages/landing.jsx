@@ -72,13 +72,15 @@ export default function CodeConquer() {
             <div className="contact-card">
               <h3>💬 Feedback</h3>
               <p>Help us improve CodeConquer by sharing your thoughts.</p>
-              <button className="outline-btn">Give Feedback</button>
+              
+              <Link to="/feedback" className="outline-btn">Give Feedback</Link>
+
             </div>
 
             <div className="contact-card">
               <h3>📩 Contact Us</h3>
               <p>Reach out for support, collaborations, or queries.</p>
-              <button className="outline-btn">Contact Team</button>
+              <Link to="/contact" className="outline-btn">Contact Team</Link>
             </div>
           </div>
         </section>
