@@ -5,13 +5,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 120px 20px;
+  padding: 0 20px;
+  padding-top: 100px;
 }
 
 
 .form-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   padding: 50px;
 
   background: rgba(10, 10, 15, 0.85);

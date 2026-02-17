@@ -91,6 +91,49 @@ body {
   justify-content: center;
 }
 
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.hero-signin-note {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5); 
+  font-family: 'Inter', sans-serif; 
+  letter-spacing: 0.5px;
+}
+
+.hero-signin-note a {
+  color: #ff8c00; 
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.hero-signin-note a:hover {
+  text-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+  color: #ffa500;
+}
+
+.hero-signin-note a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #ff8c00;
+  transition: width 0.3s ease;
+}
+
+.hero-signin-note a:hover::after {
+  width: 100%;
+}
+
 .image-wrapper {
   position: relative;
   display: inline-block;

@@ -1,8 +1,15 @@
 import './navbar.css';
 import logoImage from "../assets/logo.png";
 import { Link } from 'react-router-dom';
+import Hamburger from './Hamburger.jsx';
+import { useState } from 'react';
 
 export default function Navbar() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+    setIsOpen(!isOpen);
+};
     return (
         <div>
             <nav className="navbar">
@@ -17,8 +24,10 @@ export default function Navbar() {
                     </div>
 
                     <div className="brand">
+                        <Link to="/" className="brand-link">
                         <span className="brand-main">Code</span>
                         <span className="brand-accent">Conquer</span>
+                        </Link>
                     </div>
                 </div>
 
@@ -37,8 +46,8 @@ export default function Navbar() {
                         About us
                     </Link>
 
-                    <Link to="/sign" className="badge-link">
-                        Sign-in
+                    <Link to="/signup" className="badge-link">
+                        Sign-in/Sign-up
                     </Link>
 
                     <div className="dots">⋮</div>

@@ -28,9 +28,15 @@ export default function CodeConquer() {
               Go from zero to hero, build hands-on projects and gain practical skills.
             </p>
 
+            <div className="hero-actions">
             <Link to="/roadmap" className="cta-btn">
               Explore Courses
             </Link>
+            
+            <p className="hero-signin-note">
+              Already a member? <Link to="/login">Sign In</Link>
+            </p>
+          </div>
           </div>
 
           <div className="hero-right">

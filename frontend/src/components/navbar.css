@@ -23,6 +23,20 @@
     cursor: pointer;
     color: white;
 }
+
+.hamburger-icon {
+    display: flex; 
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    z-index: 9999 !important; 
+    cursor: pointer;
+    padding: 10px; 
+}
+
+.bar {
+    pointer-events: none; 
+}
 .logo-circle {
     width: 38px;
     height: 38px;
@@ -38,7 +52,13 @@
     border-radius: 50%;
     width: 50px;
     height: 40px;
+
 }
+
+.brand-link {
+    text-decoration: none;  
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -100,3 +120,5 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
+
+
