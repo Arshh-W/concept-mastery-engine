@@ -8,7 +8,7 @@ import Signup from './pages/Signup.jsx';
 import Feedback from './pages/Feedback.jsx';
 import Contact from './pages/Contact.jsx';
 import Login from './pages/Login.jsx';
-import Hamburger from './components/Hamburger.jsx';
+
 
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
         <Route path="/about" element={<About/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>} />
-        <Route path="/hamburger" element={<Hamburger/>} />
+        
         <Route path="/feedback" element={<Feedback/>}/>
         <Route path="/contact" element={<Contact/>}/>
       </Routes>
