@@ -3,7 +3,7 @@ import Navbar from "../components/navbar";
 import { motion } from "framer-motion";
 import "./Os.css";
 
-export default function Os() {
+export default function Dbms() {
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -36,12 +36,13 @@ export default function Os() {
       >
         <motion.div className="os-hero" variants={fadeUp}>
           <h1>
-            Operating <span>System</span>
+            Database <span>Management System</span>
           </h1>
           <p>
-            Master core OS concepts including processes, memory management,
-            scheduling, synchronization, kernel architecture, and system internals.
-            Build deep understanding through structured missions.
+            Master core DBMS concepts including relational models,
+            normalization, indexing, transactions, concurrency control,
+            and query optimization. Build strong fundamentals for system design
+            and backend engineering.
           </p>
         </motion.div>
 
@@ -66,11 +67,9 @@ export default function Os() {
           <div className="timeline">
 
             {[
-              
-              "1. OS Architecture & Components",
-              "2. Process Management",
-              "3.Something",
-              "4.something"
+              "1. Introduction to Databases",
+              "2. Relational Model & Normalization",
+              "3. Transactions & Concurrency Control"
             ].map((title, index) => (
               <motion.div
                 key={index}

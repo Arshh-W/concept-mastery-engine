@@ -48,7 +48,9 @@ export default function Roadmap() {
                 <div className="portal-icon">🗄️</div>
                 <h2>Database Systems</h2>
                 <p>Unlock the secrets of indexing, transactions, and relational logic.</p>
-                <button className="enter-btn">Initialize Mission</button>
+                <Link to="/dbms" className="enter-btn">
+                  Initialize Mission
+                </Link>
               </div>
               <div className="portal-bg"></div>
             </div>
