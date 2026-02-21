@@ -65,7 +65,48 @@ export default function CodeConquer() {
             </div>
           </div>
         </section>
+        {/* FEATURES / GAME MECHANICS SECTION */}
+      <section className="engine-features">
+        <div className="section-label">System Modules</div>
+        <h2 className="glitch-text">Engine Capabilities</h2>
+        
+        <div className="features-grid">
+          <div className="feature-item">
+            <div className="feature-icon">📂</div>
+            <h3>Live Kernel Sandbox</h3>
+            <p>Don't just read about File Systems. Interact with a simulated Kernel in real-time. Mount drives and manage permissions.</p>
+            </div>
 
+            <div className="feature-item">
+              <div className="feature-icon">📊</div>
+              <h3>Query Arena</h3>
+              <p>Battle through SQL optimization challenges. Write queries to extract data from a "Corrupted Database" to save the system.</p>
+            </div>
+
+            <div className="feature-item">
+              <div className="feature-icon">⚡</div>
+              <h3>CPU Scheduling Sim</h3>
+              <p>Visualize Round Robin and SJF algorithms. Balance the load of a high-performance gaming server without crashing.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* STATS / PROGRESSION SECTION */}
+        <section className="stats-bar">
+          <div className="stat-card">
+            <span className="stat-number">15+</span>
+            <span className="stat-desc">Levels Unlocked</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">500+</span>
+            <span className="stat-desc">Terminal Commands</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">0</span>
+            <span className="stat-desc">Boring Lectures</span>
+          </div>
+        </section>
+        
         {/* CONTACT SECTION */}
         <section className="contact-section">
           <h2>Connect With Us</h2>

@@ -2,14 +2,14 @@
 #include <sstream>
 #include <functional>
 
-"""
-So What the prerequisite DAG does is that it we represent the learning paths for the game engine. 
-Each node in our graph represents a competency variable or skill, and edges represent all prerequisites to unlock it.
-The DAG allows us to determine which competencies are available to the player rn,
-based on their current probabilistic mastery scores, and it will also provide paths to unlock specific competencies.
+// """
+// So What the prerequisite DAG does is that it we represent the learning paths for the game engine. 
+// Each node in our graph represents a competency variable or skill, and edges represent all prerequisites to unlock it.
+// The DAG allows us to determine which competencies are available to the player rn,
+// based on their current probabilistic mastery scores, and it will also provide paths to unlock specific competencies.
 
-I read a lot of blogs to figure this out lol, tho it was quite intuitive. 
-"""
+// I read a lot of blogs to figure this out lol, tho it was quite intuitive. 
+// """
 
 PrerequisiteDAG::PrerequisiteDAG(float threshold)
     : masteryThreshold(threshold) {
