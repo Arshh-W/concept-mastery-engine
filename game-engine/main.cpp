@@ -3,6 +3,7 @@
 #include <map>
 #include "header/PrerequisiteDAG.h"
 #include "header/Utils.h"
+#include "header/Telemetry.h"
 
 // Core simulation for OS Memory and Scheduling
 class SimulationEngine {
@@ -41,6 +42,24 @@ int main() {
     // JSON-like string and  then logging the first portion
     std::string json = dag.toJson();
     std::cout << "Serialized graph (truncated): " << json.substr(0, 200) << "...\n";
+
+    // telemetry system for recording a user attempt
+    TelemetryCollector telemetry;
+    ObservedResponse response1 = {
+        "allocate_memory",
+        true,
+        2.5f,
+        "OS_Memory",
+        "basic_alloc",
+        5.0f,
+        0.45f,
+        Utils::getCurrentTimestamp(),
+        "user_completed_task_successfully"
+    };
+    telemetry.recordObservation(response1);
+
+    std::cout << "Telemetry - Success rate: " << telemetry.getSuccessRate() << "\n";
+    std::cout << "Telemetry - Avg response time: " << telemetry.getAverageResponseTime() << "s\n";
 
     return 0;
 }

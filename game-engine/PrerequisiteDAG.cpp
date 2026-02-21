@@ -8,8 +8,8 @@
 // The DAG allows us to determine which competencies are available to the player rn,
 // based on their current probabilistic mastery scores, and it will also provide paths to unlock specific competencies.
 
-// I read a lot of blogs to figure this out lol, tho it was quite intuitive. 
-// """
+I read a lot of blogs to figure this out lol, tho it was quite intuitive. 
+"""
 
 PrerequisiteDAG::PrerequisiteDAG(float threshold)
     : masteryThreshold(threshold) {
