@@ -1,0 +1,205 @@
+.os-page {
+    min-height: 100vh;
+    padding: 120px 8%;
+    background: radial-gradient(circle at 20% 10%, #000101 0%, #010208 50%, #000000 100%);
+    position: relative;
+    color: white;
+    overflow: hidden;
+}
+
+.os-page::before {
+    content: "";
+    position: absolute;
+    inset: -200px;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.105) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    transform: rotateY(-30deg);
+}
+
+.os-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(circle at 30% 20%, rgba(253, 126, 35, 0.103), transparent 40%);
+    pointer-events: none;
+}
+
+.os-hero {
+    max-width: 750px;
+    margin-bottom: 90px;
+    position: relative;
+    z-index: 2;
+}
+
+.os-hero h1 {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.05;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
+    text-shadow:
+        0 0 20px rgba(249, 115, 22, 0.25),
+        0 0 40px rgba(249, 115, 22, 0.15);
+}
+
+.os-hero h1 span {
+    background: linear-gradient(90deg, #f97316, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.os-hero p {
+    font-size: 18px;
+    color: #9ca3af;
+    line-height: 1.8;
+}
+
+.os-progress-card {
+    background: rgba(18, 18, 18, 0.9);
+    border: 1px solid #1f1f1f;
+    border-radius: 20px;
+    padding: 30px 35px;
+    margin-bottom: 70px;
+    backdrop-filter: blur(12px);
+    position: relative;
+    z-index: 2;
+}
+
+.os-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.os-progress-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.os-progress-header span {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 14px;
+    background: #1f1f1f;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f97316, #fb923c);
+    border-radius: 20px;
+    width: 0%;
+}
+
+.learning-path {
+    position: relative;
+    z-index: 2;
+}
+
+.learning-path h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 60px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #1f1f1f;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 12px;
+    top: 18px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.7);
+    animation: pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(249, 115, 22, 0.9);
+    }
+
+    100% {
+        box-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+    }
+}
+
+.mission-card {
+    margin-left: 40px;
+    padding: 25px 30px;
+    border-radius: 18px;
+    background: rgba(18, 18, 18, 0.95);
+    border: 1px solid #1f1f1f;
+    transition: all 0.35s cubic-bezier(.22, 1, .36, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent 0%,
+            rgba(249, 115, 22, 0.08) 50%,
+            transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.mission-card:hover::before {
+    transform: translateX(100%);
+}
+
+.mission-card:hover {
+    border: 1px solid #f97316;
+    box-shadow:
+        0 15px 40px rgba(249, 115, 22, 0.15),
+        0 0 25px rgba(249, 115, 22, 0.25);
+}
+
+.mission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.mission-progress {
+    font-size: 14px;
+    color: #f97316;
+}

@@ -46,7 +46,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link to="/signup" className="badge-link" onClick={() => setIsOpen(false)}>
-                        Sign-in/Sign-up
+                        Join Mission
                     </Link>
 
                     <div className="dots">⋮</div>

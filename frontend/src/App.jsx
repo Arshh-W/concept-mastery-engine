@@ -3,7 +3,8 @@ import { AnimatePresence } from 'framer-motion';
 import CodeConquer from './pages/landing.jsx';
 import Roadmap from './pages/Roadmap.jsx';
 import Os from './pages/os.jsx';
-import About from './pages/About.jsx';
+import Dbms from './pages/dbms.jsx';
+import About from './pages/about.jsx';
 import Signup from './pages/Signup.jsx';
 import Feedback from './pages/Feedback.jsx';
 import Contact from './pages/Contact.jsx';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<CodeConquer />} />
         <Route path="/roadmap" element={<Roadmap />} />
         <Route path="/os" element={<Os/>}/>
+        <Route path="/dbms" element={<Dbms/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>} />
