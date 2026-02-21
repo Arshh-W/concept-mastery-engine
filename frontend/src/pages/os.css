@@ -203,3 +203,51 @@
     font-size: 14px;
     color: #f97316;
 }
+.dropdown-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #aaa;
+  transition: 0.3s;
+}
+
+.dropdown-btn:hover {
+  color: white;
+}
+
+.mission-content {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.complete-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.complete-btn:hover {
+  background: #334155;
+}
+
+.complete-btn.done {
+  background: #16a34a;
+  border: none;
+  color: white;
+}
