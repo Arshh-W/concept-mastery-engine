@@ -4,6 +4,7 @@
 #include "header/PrerequisiteDAG.h"
 #include "header/Utils.h"
 #include "header/Telemetry.h"
+#include "header/MemorySimulator.h"
 
 // Core simulation for OS Memory and Scheduling
 class SimulationEngine {
@@ -60,6 +61,20 @@ int main() {
 
     std::cout << "Telemetry - Success rate: " << telemetry.getSuccessRate() << "\n";
     std::cout << "Telemetry - Avg response time: " << telemetry.getAverageResponseTime() << "s\n";
+
+    // memory simulator demo - testing different allocation strategies
+    std::cout << "\n--- Memory Simulator Demo ---\n";
+    MemorySimulator memSim(1024, AllocationStrategy::FIRST_FIT);
+    int addr1, addr2;
+    if (memSim.allocateMemory(1, 256, addr1)) {
+        std::cout << "Allocated 256KB for process 1 at address " << addr1 << "\n";
+    }
+    if (memSim.allocateMemory(2, 128, addr2)) {
+        std::cout << "Allocated 128KB for process 2 at address " << addr2 << "\n";
+    }
+    std::cout << "Fragmentation count: " << memSim.getFragmentationCount() << "\n";
+    std::cout << "External fragmentation ratio: " << memSim.getExternalFragmentationRatio() << "\n";
+    std::cout << "Total allocated: " << memSim.getTotalAllocatedMemory() << "KB\n";
 
     return 0;
 }

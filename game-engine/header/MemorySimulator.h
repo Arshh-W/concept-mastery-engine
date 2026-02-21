@@ -10,13 +10,12 @@
 /*
  MemorySimulator.h - OS Memory Management Simulation
 
- Simulates real-world memory allocation strategies:
+ Simulates actual memory allocation strategies:
  - First Fit: Allocates to the first suitable hole
  - Best Fit: Allocates to the tightest suitable hole
  - Worst Fit: Allocates to the largest suitable hole
- These are fundamental concepts that learners need to master
- for understanding OS memory management.
- */
+ These replicate the fundamental concepts that learners need to master OS basics for memory managemnt.
+*/
 
 enum class AllocationStrategy {
     FIRST_FIT,
@@ -28,7 +27,7 @@ struct MemoryBlock {
     int processId;       // 0 = free, >0 = allocated to process
     int size;            // Size in KB
     int startAddress;    // Starting address
-    bool isAllocated;    // True if allocated
+    bool isAllocated;   // true if allocated, false if free
 
     MemoryBlock(int start, int sz)
         : processId(0), size(sz), startAddress(start), isAllocated(false) {}
@@ -56,10 +55,7 @@ private:
     float externalFragmentationRatio;
     int compactionCount;
 
-    /*
-     Calculating fragmentation metrics by counting free blocks and
-     computing the ratio of fragmented holes to total blocks
-     */
+    //calculating fragmentation metrics after each allocation/deallocation to track memory state
     void calculateFragmentation() {
         int freeBlocks = 0;
         for (const auto& block : memoryBlocks) {
@@ -73,10 +69,7 @@ private:
         }
     }
 
-    /*
-     Finding first suitable free block (first fit strategy)
-     returns index or -1 if no block found
-     */
+    //finding first fit free block
     int findFirstFitBlock(int size) {
         for (size_t i = 0; i < memoryBlocks.size(); ++i) {
             if (!memoryBlocks[i].isAllocated && memoryBlocks[i].size >= size) {
@@ -86,9 +79,7 @@ private:
         return -1;
     }
 
-    /*
-     Finding best fit free block (tightest hole that still fits the request)
-     */
+    //finding best fit free block 
     int findBestFitBlock(int size) {
         int bestIdx = -1;
         int bestSize = INT_MAX;
@@ -103,9 +94,7 @@ private:
         return bestIdx;
     }
 
-    /*
-     Finding worst fit free block (largest available hole)
-     */
+    //finding worst fit free block
     int findWorstFitBlock(int size) {
         int worstIdx = -1;
         int worstSize = -1;
@@ -123,7 +112,7 @@ private:
 public:
     /*
      Constructing memory simulator with total memory size and allocation strategy.
-     Initializes with one large free block representing entire available memory
+     Initializes with one large free block. 
      */
     MemorySimulator(int memory = 4096, AllocationStrategy strat = AllocationStrategy::FIRST_FIT)
         : totalMemory(memory), strategy(strat), fragmentationCount(0),
@@ -132,10 +121,7 @@ public:
         calculateFragmentation();
     }
 
-    /*
-     Allocating memory for a process. Returns true if successful, false if no
-     suitable hole found. outAddress contains the starting address of allocated block
-     */
+    //allocating memory for a process with the state, size, etc and returning starting address if successful 
     bool allocateMemory(int processId, int size, int& outAddress) {
         if (size <= 0 || size > totalMemory) return false;
 
@@ -157,26 +143,23 @@ public:
 
         MemoryBlock& block = memoryBlocks[blockIdx];
         outAddress = block.startAddress;
+        int newFreeBlockSize = block.size - size;
 
-        // If block is larger than needed, split it
-        if (block.size > size) {
-            MemoryBlock newFreeBlock(block.startAddress + size, block.size - size);
+        // If block is larger than needed, We split it
+        if (newFreeBlockSize > 0) {
+            MemoryBlock newFreeBlock(block.startAddress + size, newFreeBlockSize);
             memoryBlocks.insert(memoryBlocks.begin() + blockIdx + 1, newFreeBlock);
         }
 
-        // Mark block as allocated
-        block.isAllocated = true;
-        block.processId = processId;
-        block.size = size;
+        memoryBlocks[blockIdx].isAllocated = true;
+        memoryBlocks[blockIdx].processId = processId;
+        memoryBlocks[blockIdx].size = size;
 
         calculateFragmentation();
         return true;
     }
 
-    /*
-     Deallocating memory at a given address. Merges adjacent free blocks
-     to reduce fragmentation
-     */
+    //for deallocating memory based on an address
     bool deallocateMemory(int address) {
         for (auto& block : memoryBlocks) {
             if (block.startAddress == address && block.isAllocated) {
@@ -190,9 +173,7 @@ public:
         return false;
     }
 
-    /*
-     Merging adjacent free blocks to combat external fragmentation
-     */
+    //Merging adjacent free blocks to reduce frag after deallocation
     void mergeAdjacentFreeBlocks() {
         for (size_t i = 0; i < memoryBlocks.size() - 1; ++i) {
             if (!memoryBlocks[i].isAllocated && !memoryBlocks[i + 1].isAllocated) {
@@ -205,15 +186,12 @@ public:
         }
     }
 
-    /*
-     Performing memory compaction by moving all allocated blocks to the start
-     and creating one large free block at the end. This eliminates external fragmentation.
-     */
+    
     void performCompaction() {
         std::vector<MemoryBlock> compacted;
         int currentAddress = 0;
 
-        // Move all allocated blocks to the beginning
+        // Moving all allocated blocks to the beginning
         for (auto& block : memoryBlocks) {
             if (block.isAllocated) {
                 block.startAddress = currentAddress;
@@ -232,19 +210,13 @@ public:
         calculateFragmentation();
     }
 
-    /*
-     Getting fragmentation count (number of free holes)
-     */
+    //getting current frag count (number of free holes)
     int getFragmentationCount() const { return fragmentationCount; }
 
-    /*
-     Getting external fragmentation ratio as a float between 0 and 1
-     */
+    //external fragmentation ratio ( Free holes/ Total blocks)
     float getExternalFragmentationRatio() const { return externalFragmentationRatio; }
 
-    /*
-     Getting total allocated memory across all allocated blocks
-     */
+    //getting total allocated memory in KB
     int getTotalAllocatedMemory() const {
         int total = 0;
         for (const auto& block : memoryBlocks) {
@@ -253,14 +225,10 @@ public:
         return total;
     }
 
-    /*
-     Getting number of times compaction has been performed
-     */
+    //getting count of performed compactions, used for analyzsing different strategies
     int getCompactionCount() const { return compactionCount; }
 
-    /*
-     Serializing current memory state to JSON-like string format
-     */
+    //serializing current memory state to a JSON-like string for logging or analysis
     std::string getStateJsonString() const {
         std::string json = "{";
         json += "\"totalMemory\":" + std::to_string(totalMemory) + ",";
@@ -282,9 +250,9 @@ public:
         return json;
     }
 
-    /*
-     Getting count of allocated blocks currently in memory
-     */
+    
+     //Getting count of allocated blocks currently in memory
+
     int getAllocatedBlockCount() const {
         int count = 0;
         for (const auto& block : memoryBlocks) {
@@ -293,9 +261,8 @@ public:
         return count;
     }
 
-    /*
-     Resetting memory simulator to initial state with one large free block
-     */
+    
+    //Resetting the simulator to initial state with one large free block
     void reset() {
         memoryBlocks.clear();
         memoryBlocks.emplace_back(0, totalMemory);
