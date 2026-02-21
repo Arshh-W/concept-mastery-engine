@@ -26,7 +26,6 @@ const Login = () => {
     <div>
         <Navbar />
       <div className="auth-container">
-        {/* We wrap everything in a card/box so it's not loose */}
         <div className="auth-card glass fade-in"> 
           <h1>Code Conquer</h1>
           <p className="subtitle">Learn and Improve</p>

@@ -1,5 +1,9 @@
-flask
-flask-cors
-pyBKT
-sqlparse
-numpy
+Flask>=3.0.2
+Flask-Cors>=4.0.0
+SQLAlchemy>=2.0.25
+python-jose[cryptography]>=3.3.0
+bcrypt>=4.0.0
+python-dotenv>=1.0.0
+pydantic>=2.9.0
+email-validator>=2.2.0
+psycopg[binary]>=3.1.18
