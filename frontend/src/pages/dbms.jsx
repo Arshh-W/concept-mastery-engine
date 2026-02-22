@@ -6,16 +6,61 @@ import "./Os.css";
 export default function Dbms() {
   const missionsData = [
     {
-      title: "1. Introduction to Databases",
-      topics: ["What is DBMS?", "Database Architecture"]
+      title: "1. DBMS Fundamentals",
+      topics: [
+        "What is DBMS?",
+        "Database Architecture (1-Tier, 2-Tier, 3-Tier)",
+        "Advantages of DBMS",
+        "Types of Databases"
+      ]
     },
     {
       title: "2. Relational Model & Normalization",
-      topics: ["ER Model", "1NF, 2NF, 3NF"]
+      topics: [
+        "Relational Model",
+        "ER Model",
+        "Mapping ER to Relational Model",
+        "Functional Dependencies",
+        "1NF",
+        "2NF",
+        "3NF",
+        "BCNF"
+      ]
     },
     {
       title: "3. Transactions & Concurrency Control",
-      topics: ["ACID Properties", "Locks & Deadlocks"]
+      topics: [
+        "Transactions",
+        "ACID Properties",
+        "Concurrency Problems (Lost Update, Dirty Read)",
+        "Locks (Shared & Exclusive)",
+        "Two-Phase Locking (2PL)",
+        "Deadlocks",
+        "Deadlock Detection & Prevention"
+      ]
+    },
+    {
+      title: "4. Indexing & Trees (Core Visual Module)",
+      topics: [
+        "Binary Search Tree",
+        "B-Tree",
+        "B+ Tree",
+        "Node Splitting",
+        "Node Merging",
+        "Height Growth",
+        "Traversal Paths",
+        "Index vs Table Scan"
+      ]
+    },
+    {
+      title: "5. Query Processing & Optimization",
+      topics: [
+        "SELECT Statement",
+        "WHERE Filtering",
+        "Index Usage in Queries",
+        "Joins (Inner Join, Outer Join)",
+        "Query Optimization Basics"
+      ]
     }
   ];
 
@@ -72,19 +117,16 @@ export default function Dbms() {
         initial="hidden"
         animate="show"
       >
-        
         <motion.div className="os-hero" variants={fadeUp}>
           <h1>
             Database <span>Management System</span>
           </h1>
           <p>
-            Master core DBMS concepts including relational models,
-            normalization, indexing, transactions, concurrency control,
-            and query optimization.
+            Master DBMS concepts including relational models, normalization,
+            indexing, transactions, concurrency control, and query optimization.
           </p>
         </motion.div>
 
-      
         <motion.div className="os-progress-card" variants={fadeUp}>
           <div className="os-progress-header">
             <h3>Overall Progress</h3>
@@ -102,24 +144,18 @@ export default function Dbms() {
           </div>
         </motion.div>
 
-        
         <motion.div className="learning-path" variants={fadeUp}>
           <h2>Learning Path</h2>
 
           <div className="timeline">
             {missionsData.map((mission, index) => (
-              <motion.div
-                key={index}
-                className="timeline-item"
-                variants={fadeUp}
-              >
+              <motion.div key={index} className="timeline-item">
                 <div className="timeline-dot"></div>
 
                 <div className="mission-card">
                   <div className="mission-header">
                     <span>{mission.title}</span>
 
-                   
                     <motion.button
                       className="dropdown-btn"
                       onClick={() => toggleDropdown(index)}
@@ -137,7 +173,7 @@ export default function Dbms() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        transition={{ duration: 0.4 }}
                         style={{ overflow: "hidden" }}
                       >
                         {mission.topics.map((topic, topicIndex) => {
@@ -148,9 +184,6 @@ export default function Dbms() {
                             <motion.div
                               key={topicIndex}
                               className="topic-row"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: topicIndex * 0.1 }}
                             >
                               <span>{topic}</span>
 

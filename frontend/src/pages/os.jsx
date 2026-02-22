@@ -6,20 +6,75 @@ import "./Os.css";
 export default function Os() {
   const missionsData = [
     {
-      title: "1. OS Architecture & Components",
-      topics: ["Kernel Types", "System Calls"]
+      title: "1. OS Fundamentals",
+      topics: [
+        "What is an Operating System?",
+        "Kernel vs User Mode",
+        "System Calls",
+        "OS Architecture (Monolithic Kernel)",
+        "OS Architecture (Microkernel)"
+      ]
     },
     {
       title: "2. Process Management",
-      topics: ["PCB", "Scheduling Algorithms"]
+      topics: [
+        "Process vs Program",
+        "Process States (New, Ready, Running, Waiting, Terminated)",
+        "Process Control Block (PCB)",
+        "Context Switching",
+        "CPU Scheduling - FCFS",
+        "CPU Scheduling - SJF",
+        "CPU Scheduling - Priority",
+        "CPU Scheduling - Round Robin",
+        "Gantt Chart Visualization",
+        "Waiting Time Calculation",
+        "Turnaround Time Calculation"
+      ]
     },
     {
       title: "3. Memory Management",
-      topics: ["Paging", "Segmentation"]
+      topics: [
+        "Contiguous Memory Allocation",
+        "Internal Fragmentation",
+        "External Fragmentation",
+        "First Fit Algorithm",
+        "Best Fit Algorithm",
+        "Worst Fit Algorithm",
+        "Compaction",
+        "Paging",
+        "Segmentation",
+        "Virtual Memory",
+        "Page Replacement - FIFO",
+        "Page Replacement - LRU",
+        "Page Replacement - Optimal",
+        "Page Faults",
+        "TLB (Translation Lookaside Buffer)"
+      ]
     },
     {
-      title: "4. Synchronization",
-      topics: ["Mutex", "Semaphores"]
+      title: "4. Synchronization & Concurrency",
+      topics: [
+        "Critical Section Problem",
+        "Race Conditions",
+        "Mutex",
+        "Semaphores",
+        "Producer-Consumer Problem",
+        "Readers-Writers Problem",
+        "Deadlock",
+        "Banker's Algorithm",
+        "Resource Allocation Graph"
+      ]
+    },
+    {
+      title: "5. File Systems",
+      topics: [
+        "File Allocation Methods",
+        "Inodes",
+        "Disk Scheduling - FCFS",
+        "Disk Scheduling - SSTF",
+        "Disk Scheduling - SCAN",
+        "Disk Scheduling - C-SCAN"
+      ]
     }
   ];
 
@@ -76,7 +131,6 @@ export default function Os() {
         initial="hidden"
         animate="show"
       >
-      
         <motion.div className="os-hero" variants={fadeUp}>
           <h1>
             Operating <span>System</span>
@@ -87,7 +141,6 @@ export default function Os() {
           </p>
         </motion.div>
 
-       
         <motion.div className="os-progress-card" variants={fadeUp}>
           <div className="os-progress-header">
             <h3>Overall Progress</h3>
@@ -105,7 +158,6 @@ export default function Os() {
           </div>
         </motion.div>
 
-        
         <motion.div className="learning-path" variants={fadeUp}>
           <h2>Learning Path</h2>
 
@@ -122,7 +174,6 @@ export default function Os() {
                   <div className="mission-header">
                     <span>{mission.title}</span>
 
-                    
                     <motion.button
                       className="dropdown-btn"
                       onClick={() => toggleDropdown(index)}
@@ -133,7 +184,6 @@ export default function Os() {
                     </motion.button>
                   </div>
 
-                  
                   <AnimatePresence>
                     {openIndex === index && (
                       <motion.div
@@ -141,7 +191,7 @@ export default function Os() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        transition={{ duration: 0.4 }}
                         style={{ overflow: "hidden" }}
                       >
                         {mission.topics.map((topic, topicIndex) => {
@@ -154,7 +204,7 @@ export default function Os() {
                               className="topic-row"
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: topicIndex * 0.1 }}
+                              transition={{ delay: topicIndex * 0.05 }}
                             >
                               <span>{topic}</span>
 
