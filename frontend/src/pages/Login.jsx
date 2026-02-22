@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate ,Link } from "react-router-dom";
 import Navbar from "../components/navbar.jsx";
+
 import "./Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
 
   const handleLogin = async () => {
@@ -16,7 +18,7 @@ const Login = () => {
         id: res.data.user_Id,
         username: res.data.username
       });
-      navigate("/mentor");
+
     } catch (err) {
       alert("Invalid credentials");
     }
