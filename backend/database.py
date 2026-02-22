@@ -39,7 +39,7 @@ def get_db():
         db.close()
 
 def init_db():
-    from app.models.user import User
+    from models import User, Progress, Achievement, Module, SubjectEnum
 
     Base.metadata.create_all(bind=engine)
     print("Database tables created successfully")
