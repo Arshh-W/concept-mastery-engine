@@ -10,7 +10,7 @@ import Signup from "./pages/Signup.jsx";
 import Feedback from "./pages/Feedback.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
-
+import GameShell from "./pages/GameShell";
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/os/memory" element={<GameShell />} />
         
       </Routes>
     </AnimatePresence>

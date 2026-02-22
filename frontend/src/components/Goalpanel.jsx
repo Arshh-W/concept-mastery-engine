@@ -8,3 +8,4 @@ const GoalPanel = () => {
         </div>
     );
 }
+export default GoalPanel;

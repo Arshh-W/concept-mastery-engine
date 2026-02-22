@@ -1,4 +1,5 @@
 import React from "react";
+
 const EventLog = () => {
     return (
         <div className="event-log">
@@ -12,4 +13,6 @@ const EventLog = () => {
             </ul>
         </div>
     );
-}
+};
+
+export default EventLog;

@@ -1,15 +1,51 @@
-import React from 'react';
+import React, { useState } from "react";
 
-const Terminal = () => {
-    return (
-        <div className="terminal">
-            <h2>Terminal</h2>
-            <p>Welcome to the Code Conquer Terminal. Here you can execute commands and see your progress.</p>
-            <div className="terminal-output">
-                <p><span className="command"> </span>Welcome to Code Conquer!</p>
-                <p><span className="command"> </span>Type 'help' to see available commands.</p>
-            </div>
-            <input type="text" className="terminal-input" placeholder="Enter command..." />
-        </div>
-    );
+export default function Terminal({ onCommand }) {
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState([]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (!input.trim()) return;
+
+      
+      setHistory((prev) => [...prev, input]);
+
+      
+      if (onCommand) {
+        onCommand(input);
+      }
+
+      
+      setInput("");
+    }
+  };
+
+  return (
+    <div style={{ padding: "10px", fontFamily: "monospace", color: "lime" }}>
+      
+      {history.map((cmd, index) => (
+        <div key={index}>$ {cmd}</div>
+      ))}
+
+      
+      <div>
+        ${" "}
+        <input
+          style={{
+            background: "black",
+            border: "none",
+            outline: "none",
+            color: "lime",
+            width: "90%",
+            fontFamily: "monospace",
+          }}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      </div>
+    </div>
+  );
 }

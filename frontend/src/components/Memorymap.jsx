@@ -26,3 +26,4 @@ const MemoryMap = () => {
         </div>
     );
 }
+export default MemoryMap;
