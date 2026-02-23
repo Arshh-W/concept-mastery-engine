@@ -1,77 +1,94 @@
+:root {
+  --sidebar-width: 350px;
+  --terminal-height: 250px;
+  --navbar-height: 65px;
+  --ember-glow: rgba(255, 132, 0, 0.2);
+}
 
-
+/* Main Wrapper */
 .game-container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 220px;
-
-  height: calc(100vh - 70px);
-  margin-top: 70px;
-
-  background: #0d0d0d;
-  gap: 12px;
-  padding: 12px;
-
+  /* Left panel expands, Right panel is fixed */
+  grid-template-columns: 1fr var(--sidebar-width);
+  /* Top area expands, Bottom panel is fixed */
+  grid-template-rows: 1fr var(--terminal-height);
+  
+  height: calc(100vh - var(--navbar-height));
+  margin-top: var(--navbar-height);
+  background: #050508;
+  gap: 10px;
+  padding: 10px;
   box-sizing: border-box;
+  overflow: hidden; /* No scroll on the main shell */
 }
 
 .left-panel {
   grid-column: 1;
   grid-row: 1;
-
-  background: #141414;
+  background: rgba(15, 15, 20, 0.6);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   overflow: hidden;
-
-  box-shadow: 0 0 15px rgba(255, 140, 0, 0.05);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
-
-
 
 .right-panel {
   grid-column: 2;
-  grid-row: 1;
-
-  background: #141414;
-  border-radius: 12px;
-  padding: 16px;
-
-  overflow-y: auto;
-
-  box-shadow: 0 0 15px rgba(255, 140, 0, 0.05);
-
+  grid-row: 1 / span 2; 
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
+.right-panel > div {
+  background: rgba(10, 10, 15, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex: 1; 
+  overflow-y: auto;
+}
 
 
 .bottom-panel {
-  grid-column: 1 / span 2;
+  grid-column: 1;
   grid-row: 2;
-
-  background: black;
+  background: #0a0a0f;
+  border: 1px solid var(--border);
   border-radius: 12px;
-
-  padding: 10px;
-
-  overflow-y: auto;
-
-  box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+  overflow: hidden;
 }
 
 
-
-.right-panel::-webkit-scrollbar,
-.bottom-panel::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 6px;
 }
-
-.right-panel::-webkit-scrollbar-thumb,
-.bottom-panel::-webkit-scrollbar-thumb {
-  background: #444;
+::-webkit-scrollbar-track {
+  background: #050508;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ember);
   border-radius: 10px;
+}
+
+/* Responsive: Stack panels on small screens */
+@media (max-width: 1024px) {
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+  }
+  
+  .left-panel {
+    height: 400px;
+  }
+  
+  .right-panel, .bottom-panel {
+    width: 100%;
+    height: auto;
+  }
 }

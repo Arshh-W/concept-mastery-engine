@@ -1,51 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import useGameStore from '../store/useGameStore';
+import './Terminal.css';
 
-export default function Terminal({ onCommand }) {
-  const [input, setInput] = useState("");
-  const [history, setHistory] = useState([]);
+const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 'clear'];
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      if (!input.trim()) return;
+const Terminal = () => {
+    const [input, setInput] = useState('');
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    const { commandHistory, addCommand, logEvent } = useGameStore();
+    const terminalEndRef = useRef(null);
 
-      
-      setHistory((prev) => [...prev, input]);
+    // Auto-scroll to bottom on new output
+    useEffect(() => {
+        terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [commandHistory]);
 
-      
-      if (onCommand) {
-        onCommand(input);
-      }
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            processCommand();
+        } else if (e.key === 'ArrowUp') {
+            // Navigate history up
+            if (historyIndex < commandHistory.length - 1) {
+                const newIndex = historyIndex + 1;
+                setHistoryIndex(newIndex);
+                setInput(commandHistory[commandHistory.length - 1 - newIndex].cmd);
+            }
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            // Simple Autocomplete
+            const match = VALID_COMMANDS.find(c => c.toLowerCase().startsWith(input.toLowerCase()));
+            if (match) setInput(match);
+        }
+    };
 
-      
-      setInput("");
-    }
-  };
+    const processCommand = () => {
+        if (!input.trim()) return;
 
-  return (
-    <div style={{ padding: "10px", fontFamily: "monospace", color: "lime" }}>
-      
-      {history.map((cmd, index) => (
-        <div key={index}>$ {cmd}</div>
-      ))}
+        //  Log the command locally
+        addCommand(input, `Executing ${input}...`);
+        
+        //  Mock Logic (In reality, you'd call your api.js here)
+        if (input.startsWith('alloc')) {
+            logEvent("Memory allocation request sent to Kernel.", "success");
+        } else if (!VALID_COMMANDS.includes(input.split(' ')[0])) {
+            logEvent(`Unknown command: ${input}`, "error");
+        }
 
-      
-      <div>
-        ${" "}
-        <input
-          style={{
-            background: "black",
-            border: "none",
-            outline: "none",
-            color: "lime",
-            width: "90%",
-            fontFamily: "monospace",
-          }}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          autoFocus
-        />
-      </div>
-    </div>
-  );
-}
+        setInput('');
+        setHistoryIndex(-1);
+    };
+
+    return (
+        <div className="terminal-wrapper">
+            <div className="terminal-output">
+                {commandHistory.map((item, index) => (
+                    <div key={index} className="terminal-line">
+                        <span className="prompt">conqueror@root:~$</span> {item.cmd}
+                        <div className="output-text">{item.output}</div>
+                    </div>
+                ))}
+                <div ref={terminalEndRef} />
+            </div>
+            <div className="input-line">
+                <span className="prompt">conqueror@root:~$</span>
+                <input
+                    autoFocus
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type command (Tab to autocomplete)..."
+                />
+            </div>
+        </div>
+    );
+};
+
+export default Terminal;
