@@ -6,30 +6,26 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
+#dbconfig
 connection_url = URL.create(
     drivername="postgresql+psycopg",
     username="postgres",
-    password=os.getenv("DB_PASS"), 
-    host="localhost",
-    port=5432,
-    database="concept_mastery",
+    password=os.getenv("DB_PASSWORD", "password"),
+    host=os.getenv("DB_HOST", "localhost"),
+    port=int(os.getenv("DB_PORT", 5432)),
+    database=os.getenv("DB_NAME", "concept_mastery"),
 )
-print(connection_url)
+
 engine = create_engine(
     connection_url,
     pool_pre_ping=True,
-    echo=False
+    echo=False,
 )
 
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
@@ -38,9 +34,17 @@ def get_db():
     finally:
         db.close()
 
+
 def init_db():
-    from models import User, Progress, Achievement, Module, SubjectEnum
-
+    # Importing all models so SQLAlchemy can see them before we create tables
+    from models import ( 
+        User,
+        Competency,
+        Challenge,
+        MasteryState,
+        Progress,
+        GameSession,
+        Achievement,
+    )
     Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully")
-
+    print("All DB Tables Created.")

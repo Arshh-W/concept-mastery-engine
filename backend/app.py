@@ -1,25 +1,39 @@
+from flask import Flask
 from flask_cors import CORS
-from flask import Flask, Blueprint
 from config import CORS_ORIGINS
 from routes.auth import auth_bp
-from database import init_db
+from routes.game import game_bp
+from database import init_db, SessionLocal
 
 
-app = Flask(__name__)
-CORS(app, origins=CORS_ORIGINS)
+def create_app():
+    app = Flask(__name__)
+    CORS(app, origins=CORS_ORIGINS, supports_credentials=True)
 
-api_bp = Blueprint('api', __name__, url_prefix='/api')
+    #blueprints
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(game_bp, url_prefix="/api/game")
 
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    #DB init and seeding
+    init_db()
+    _seed()
 
-init_db()
+    return app
 
 
-@app.route('/mastery/update', methods=['POST'])
-def update_mastery():
-    pass
+def _seed():
+    #Seeding levles content from JSON files.
+    from services.challenge_service import seed_challenges
+    db = SessionLocal()
+    try:
+        seed_challenges(db)
+    except Exception as e:
+        print(f"[seed] Warning: {e}")
+    finally:
+        db.close()
 
-if __name__ == '__main__':
+
+app = create_app()
+
+if __name__ == "__main__":
     app.run(debug=True, port=8080)
-
-
