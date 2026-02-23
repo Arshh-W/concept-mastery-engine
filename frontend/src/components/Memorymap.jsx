@@ -1,29 +1,48 @@
 import React from "react";
+import useGameStore from "../store/useGameStore";
 
 const MemoryMap = () => {
-    return (
-        <div className="memory-map">
-            <h2>Memory Map</h2>
-            <p>This is a visual representation of the memory layout for the current module.</p>
-            <div className="memory-sections">
-                <div className="memory-section">
-                    <h3>Code Segment</h3>
-                    <p>Contains the executable code of the program.</p>
-                </div>
-                <div className="memory-section">
-                    <h3>Data Segment</h3>
-                    <p>Contains global and static variables.</p>
-                </div>
-                <div className="memory-section">    
-                    <h3>Heap</h3>
-                    <p>Used for dynamic memory allocation.</p>
-                </div>
-                <div className="memory-section">
-                    <h3>Stack</h3>
-                    <p>Used for function call management and local variables.</p>
-                </div>
-            </div>
-        </div>
-    );
-}
+  const { memory } = useGameStore();
+
+  const usagePercent = (memory.heapUsed / memory.total) * 100;
+
+  return (
+    <div>
+      <h2>Memory Map</h2>
+
+      <p>Total Memory: {memory.total} MB</p>
+      <p>Heap Used: {memory.heapUsed} MB</p>
+
+      
+      <div style={{
+        width: "100%",
+        height: "30px",
+        background: "#222",
+        borderRadius: "8px",
+        overflow: "hidden",
+        marginTop: "10px"
+      }}>
+        <div style={{
+          width: `${usagePercent}%`,
+          height: "100%",
+          background: "linear-gradient(90deg, orange, red)",
+          transition: "width 0.4s ease"
+        }} />
+      </div>
+
+      
+      <div style={{ marginTop: "15px" }}>
+        <h4>Allocated Blocks:</h4>
+        {memory.blocks.length === 0 && <p>No allocations</p>}
+
+        {memory.blocks.map(block => (
+          <div key={block.id}>
+            Block: {block.size} MB
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default MemoryMap;

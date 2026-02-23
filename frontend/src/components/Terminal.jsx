@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useGameStore from '../store/useGameStore';
+import { sendQuery } from "../services/mockApi";
 import './Terminal.css';
 
 const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 'clear'];
@@ -7,7 +8,7 @@ const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 
 const Terminal = () => {
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const { commandHistory, addCommand, logEvent } = useGameStore();
+    const { commandHistory, addCommand, logEvent, setMemoryFromBackend } = useGameStore();
     const terminalEndRef = useRef(null);
 
     // Auto-scroll to bottom on new output
@@ -33,17 +34,21 @@ const Terminal = () => {
         }
     };
 
-    const processCommand = () => {
+    const processCommand = async () => {
         if (!input.trim()) return;
 
-        //  Log the command locally
-        addCommand(input, `Executing ${input}...`);
-        
-        //  Mock Logic (In reality, you'd call your api.js here)
-        if (input.startsWith('alloc')) {
-            logEvent("Memory allocation request sent to Kernel.", "success");
-        } else if (!VALID_COMMANDS.includes(input.split(' ')[0])) {
-            logEvent(`Unknown command: ${input}`, "error");
+        const response = await sendQuery(input);
+
+        if (response.status === "success") {
+            if (response.memory) {
+                setMemoryFromBackend(response.memory);
+            }
+
+            logEvent(response.message, "success");
+            addCommand(input, response.message);
+        } else {
+            logEvent(response.message, "error");
+            addCommand(input, response.message);
         }
 
         setInput('');

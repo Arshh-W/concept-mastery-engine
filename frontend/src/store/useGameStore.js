@@ -9,6 +9,13 @@ const useGameStore = create((set) => ({
     memoryBlocks: [], // For the MemoryMap visualizer
     xp: 0,
 
+    memory: {
+        total: 256,
+        heapUsed: 0,
+        stackUsed: 0,
+        blocks: [],
+    },
+
     setSession: (id) => set({ sessionId: id }),
     
     addCommand: (cmd, output) => set((state) => ({
@@ -19,10 +26,16 @@ const useGameStore = create((set) => ({
         currentEventLog: [...state.currentEventLog, { message, type, id: Date.now() }]
     })),
 
-    updateXP: (gain) => set((state) => ({ xp: state.xp + gain }))
+    updateXP: (gain) => set((state) => ({ xp: state.xp + gain })),
+
+    setMemoryFromBackend: (memoryData) =>
+        set(() => ({
+            memory: memoryData,
+        })),
 }));
 
 export default useGameStore;
+
 // This store includes:
 // - sessionId: to track the current game session.
 // - commandHistory: an array to store all commands entered by the user along with their outputs and timestamps.
