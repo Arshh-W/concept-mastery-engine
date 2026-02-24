@@ -6,6 +6,7 @@ too detailed, just a simple call, haan ek particular schema bna lena still using
 
 Baaki sabh ready h, I'll get started on the wrapper now
 """
+
 import os
 import json
 from typing import Any, Optional
