@@ -12,6 +12,7 @@ import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import GameShell from "./pages/Gameshell";
 import Memory from "./pages/memory";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -28,7 +29,10 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/os/memory" element={<GameShell />} />
         <Route path="/os/memory1" element={<Memory />} />
-        
+        <Route path="/game/:domain/:module" element={<GameShell />} />     
+        <Route element={<ProtectedRoute />}>
+        {/* <Route path="/game/:domain/:module" element={<GameShell />} />       */}
+        </Route>
       </Routes>
     </AnimatePresence>
   );

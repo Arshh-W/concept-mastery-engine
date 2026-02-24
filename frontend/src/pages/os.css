@@ -251,3 +251,30 @@
   border: none;
   color: white;
 }
+.launch-btn {
+  background: transparent;
+  border: 1px solid #ff8400;
+  color: #ff8400;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.launch-btn:hover {
+  background: rgba(255, 132, 0, 0.1);
+  box-shadow: 0 0 15px rgba(255, 132, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.topic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}

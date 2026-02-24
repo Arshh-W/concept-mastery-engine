@@ -1,0 +1,73 @@
+.goal-panel {
+  padding: 20px;
+  color: #fff;
+  height: 100%;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 132, 0, 0.3);
+  padding-bottom: 10px;
+}
+
+.panel-header h3 {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ff8400;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.goal-item {
+  position: relative;
+  display: flex;
+  gap: 15px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.goal-item.completed {
+  background: rgba(0, 255, 100, 0.05);
+  border-color: rgba(0, 255, 100, 0.2);
+  opacity: 0.7;
+}
+
+.status-indicator {
+  font-family: 'Fira Code', monospace;
+  color: #ff8400;
+}
+
+.completed .status-indicator {
+  color: #00ff64;
+}
+
+.goal-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.reward {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: bold;
+}
+
+.strike-through {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 1px;
+  background: rgba(0, 255, 100, 0.5);
+}

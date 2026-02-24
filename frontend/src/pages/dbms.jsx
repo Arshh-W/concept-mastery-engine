@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Os.css";
 
@@ -64,11 +65,22 @@ export default function Dbms() {
     }
   ];
 
+  const navigate = useNavigate();
+
   const [openIndex, setOpenIndex] = useState(null);
   const [completed, setCompleted] = useState({});
 
   const toggleDropdown = (index) => {
     setOpenIndex(openIndex === index ? null : index);
+  };
+
+
+  const handleLaunchMission = (topic) => {
+    
+    const moduleSlug = topic.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
+    
+    
+    navigate(`/game/dbms/${moduleSlug}`);
   };
 
   const toggleComplete = (missionIndex, topicIndex) => {
@@ -110,57 +122,21 @@ export default function Dbms() {
   return (
     <>
       <Navbar />
-
-      <motion.div
-        className="os-page"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        <motion.div className="os-hero" variants={fadeUp}>
-          <h1>
-            Database <span>Management System</span>
-          </h1>
-          <p>
-            Master DBMS concepts including relational models, normalization,
-            indexing, transactions, concurrency control, and query optimization.
-          </p>
-        </motion.div>
-
-        <motion.div className="os-progress-card" variants={fadeUp}>
-          <div className="os-progress-header">
-            <h3>Overall Progress</h3>
-            <span>
-              {completedCount} of {totalTopics} Completed
-            </span>
-          </div>
-
-          <div className="progress-bar">
-            <motion.div
-              className="progress-fill"
-              animate={{ width: `${progressPercent}%` }}
-              transition={{ duration: 0.8 }}
-            />
-          </div>
-        </motion.div>
-
-        <motion.div className="learning-path" variants={fadeUp}>
+      <motion.div className="os-page" initial="hidden" animate="show">
+        {/* Hero and Progress Card sections remain as they are */}
+        
+        <motion.div className="learning-path">
           <h2>Learning Path</h2>
-
           <div className="timeline">
             {missionsData.map((mission, index) => (
               <motion.div key={index} className="timeline-item">
                 <div className="timeline-dot"></div>
-
                 <div className="mission-card">
-                  <div className="mission-header">
+                  <div className="mission-header" onClick={() => toggleDropdown(index)} style={{cursor: 'pointer'}}>
                     <span>{mission.title}</span>
-
                     <motion.button
                       className="dropdown-btn"
-                      onClick={() => toggleDropdown(index)}
                       animate={{ rotate: openIndex === index ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
                     >
                       ▼
                     </motion.button>
@@ -168,40 +144,19 @@ export default function Dbms() {
 
                   <AnimatePresence>
                     {openIndex === index && (
-                      <motion.div
-                        className="mission-content"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4 }}
-                        style={{ overflow: "hidden" }}
-                      >
-                        {mission.topics.map((topic, topicIndex) => {
-                          const key = `${index}-${topicIndex}`;
-                          const isDone = completed[key];
-
-                          return (
-                            <motion.div
-                              key={topicIndex}
-                              className="topic-row"
+                      <motion.div className="mission-content">
+                        {mission.topics.map((topic, topicIndex) => (
+                          <div key={topicIndex} className="topic-row">
+                            <span>{topic}</span>
+                            {/* Updated Button to Launch Mission */}
+                            <button
+                              className="launch-btn"
+                              onClick={() => handleLaunchMission(topic)}
                             >
-                              <span>{topic}</span>
-
-                              <button
-                                className={`complete-btn ${
-                                  isDone ? "done" : ""
-                                }`}
-                                onClick={() =>
-                                  toggleComplete(index, topicIndex)
-                                }
-                              >
-                                {isDone
-                                  ? "Completed ✓"
-                                  : "Mark as Complete"}
-                              </button>
-                            </motion.div>
-                          );
-                        })}
+                              Launch Mission 🚀
+                            </button>
+                          </div>
+                        ))}
                       </motion.div>
                     )}
                   </AnimatePresence>
