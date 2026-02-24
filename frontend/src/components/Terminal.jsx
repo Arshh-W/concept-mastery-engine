@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import useGameStore from '../store/useGameStore';
 import { sendQuery } from "../services/mockApi";
 import './Terminal.css';
@@ -6,12 +7,19 @@ import './Terminal.css';
 const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 'clear'];
 
 const Terminal = () => {
+    const { domain } = useParams();
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const { commandHistory, addCommand, logEvent, setMemoryFromBackend } = useGameStore();
+    
+    // Pulling all necessary actions from Zustand
+    const { 
+        commandHistory, addCommand, logEvent, 
+        setMemoryFromBackend, updateBTree, searchKey, 
+        completeGoal, updateXP, bTreeData 
+    } = useGameStore();
+    
     const terminalEndRef = useRef(null);
 
-    // Auto-scroll to bottom on new output
     useEffect(() => {
         terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [commandHistory]);
@@ -20,7 +28,6 @@ const Terminal = () => {
         if (e.key === 'Enter') {
             processCommand();
         } else if (e.key === 'ArrowUp') {
-            // Navigate history up
             if (historyIndex < commandHistory.length - 1) {
                 const newIndex = historyIndex + 1;
                 setHistoryIndex(newIndex);
@@ -28,27 +35,68 @@ const Terminal = () => {
             }
         } else if (e.key === 'Tab') {
             e.preventDefault();
-            // Simple Autocomplete
             const match = VALID_COMMANDS.find(c => c.toLowerCase().startsWith(input.toLowerCase()));
             if (match) setInput(match);
         }
     };
 
     const processCommand = async () => {
-        if (!input.trim()) return;
+        const trimmedInput = input.trim();
+        if (!trimmedInput) return;
 
-        const response = await sendQuery(input);
+        const [action, value] = trimmedInput.split(' ');
+        const cmd = action.toUpperCase();
 
-        if (response.status === "success") {
-            if (response.memory) {
-                setMemoryFromBackend(response.memory);
+        // 1. Handle "Local" UI Commands
+        if (cmd === 'CLEAR') {
+        useGameStore.getState().clearHistory(); // Wipe the history in the store
+        setInput('');
+        setHistoryIndex(-1);
+        return; 
+    }
+        // 2. Handle DBMS Domain Logic
+        if (domain === 'dbms') {
+            if (cmd === 'INSERT') {
+                if (!isNaN(value)) {
+                    await updateBTree(value);
+                    logEvent(`Index update: Key ${value} inserted.`, "success");
+                    addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
+                    
+                    // Check for Root Split Goal
+                    if (bTreeData.children && bTreeData.children.length > 0) {
+                        completeGoal(1);
+                    }
+                } else {
+                    addCommand(trimmedInput, "ERROR: INSERT requires a numeric key.");
+                }
+            } 
+            else if (cmd === 'SELECT') {
+                if (value) {
+                    logEvent(`Searching for Key: ${value}...`, "info");
+                    await searchKey(value);
+                    addCommand(trimmedInput, `Search completed for Key ${value}.`);
+                } else {
+                    addCommand(trimmedInput, "ERROR: SELECT requires a search key.");
+                }
             }
+            else {
+                addCommand(trimmedInput, `Unknown DBMS command: ${cmd}`);
+            }
+        }
 
-            logEvent(response.message, "success");
-            addCommand(input, response.message);
-        } else {
-            logEvent(response.message, "error");
-            addCommand(input, response.message);
+        // 3. Handle OS Domain Logic (API Driven)
+        else if (domain === 'os') {
+            const response = await sendQuery(trimmedInput);
+            if (response.status === "success") {
+                if (response.memory) {
+                    setMemoryFromBackend(response.memory);
+                }
+                logEvent(response.message, "success");
+                addCommand(trimmedInput, response.message);
+            } else {
+                logEvent(response.message, "error");
+                addCommand(trimmedInput, response.message);
+            }
         }
 
         setInput('');
@@ -73,7 +121,7 @@ const Terminal = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type command (Tab to autocomplete)..."
+                    placeholder={`Type ${domain === 'dbms' ? 'INSERT [val]' : 'alloc [val]'}...`}
                 />
             </div>
         </div>
