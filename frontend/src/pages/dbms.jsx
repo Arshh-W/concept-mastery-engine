@@ -1,130 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import "./Os.css";
+import { gameApi } from "../services/api"; 
+import "./os.css";
 
 export default function Dbms() {
-  const missionsData = [
+  const [openIndex, setOpenIndex] = useState(null);
+  const [masteryData, setMasteryData] = useState({}); // To hold real progress from backend
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchMastery = async () => {
+      try {
+        const res = await gameApi.getMasteryChallenges('dbms');
+        // Map backend data to a usable format for the UI
+        setMasteryData(res.data.challenges || {});
+      } catch (err) {
+        console.error("Failed to fetch mastery stats", err);
+      }
+    };
+    fetchMastery();
+  }, []);
+
+const missionsData = [
     {
+      id: "fundamentals_1",
       title: "1. DBMS Fundamentals",
       topics: [
-        "What is DBMS?",
-        "Database Architecture (1-Tier, 2-Tier, 3-Tier)",
-        "Advantages of DBMS",
+        "What is DBMS?", 
+        "Database Architecture", 
+        "Advantages of DBMS", 
         "Types of Databases"
       ]
     },
     {
+      id: "relational_2",
       title: "2. Relational Model & Normalization",
       topics: [
         "Relational Model",
         "ER Model",
-        "Mapping ER to Relational Model",
         "Functional Dependencies",
-        "1NF",
-        "2NF",
-        "3NF",
+        "1NF / 2NF / 3NF",
         "BCNF"
       ]
     },
     {
-      title: "3. Transactions & Concurrency Control",
+      id: "transactions_3",
+      title: "3. Transactions & Concurrency",
       topics: [
         "Transactions",
         "ACID Properties",
-        "Concurrency Problems (Lost Update, Dirty Read)",
-        "Locks (Shared & Exclusive)",
-        "Two-Phase Locking (2PL)",
-        "Deadlocks",
-        "Deadlock Detection & Prevention"
+        "Concurrency Problems",
+        "Locks and 2PL",
+        "Deadlocks"
       ]
     },
     {
+      id: "indexing_4",
       title: "4. Indexing & Trees (Core Visual Module)",
       topics: [
         "Binary Search Tree",
-        "B-Tree",
-        "B+ Tree",
-        "Node Splitting",
-        "Node Merging",
-        "Height Growth",
-        "Traversal Paths",
-        "Index vs Table Scan"
+        "B-Tree", 
+        "B+ Tree", 
+        "Node Splitting", 
+        "Traversal Paths"
       ]
     },
     {
+      id: "query_opt_5",
       title: "5. Query Processing & Optimization",
       topics: [
         "SELECT Statement",
         "WHERE Filtering",
+        "Joins (Inner/Outer)",
         "Index Usage in Queries",
-        "Joins (Inner Join, Outer Join)",
         "Query Optimization Basics"
       ]
     }
   ];
 
-  const navigate = useNavigate();
-
-  const [openIndex, setOpenIndex] = useState(null);
-  const [completed, setCompleted] = useState({});
-
-  const toggleDropdown = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
-
-  const handleLaunchMission = (topic) => {
-    
+  const handleLaunchMission = async (topic) => {
     const moduleSlug = topic.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
     
-    
-    navigate(`/game/dbms/${moduleSlug}`);
-  };
-
-  const toggleComplete = (missionIndex, topicIndex) => {
-    const key = `${missionIndex}-${topicIndex}`;
-    setCompleted((prev) => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  const totalTopics = missionsData.reduce(
-    (acc, mission) => acc + mission.topics.length,
-    0
-  );
-
-  const completedCount = Object.values(completed).filter(Boolean).length;
-  const progressPercent = Math.round((completedCount / totalTopics) * 100);
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
+    try {
+      // 2. Tell backend a session is starting
+      // This allows the BKT (Bayesian Knowledge Tracing) to track this attempt
+      await gameApi.startSession('dbms', moduleSlug);
+      
+      navigate(`/game/dbms/${moduleSlug}`);
+    } catch (err) {
+      console.warn("Could not start official session, entering practice mode.", err);
+      navigate(`/game/dbms/${moduleSlug}`);
     }
   };
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 60 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
+  const toggleDropdown = (index) => setOpenIndex(openIndex === index ? null : index);
 
   return (
     <>
       <Navbar />
-      <motion.div className="os-page" initial="hidden" animate="show">
-        {/* Hero and Progress Card sections remain as they are */}
+      <motion.div className="os-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         
+        {/* Progress Header */}
+        <div className="dbms-hero">
+          <h1>DBMS COMMAND CENTER</h1>
+          <p>Master the data layer of the world.</p>
+        </div>
+
         <motion.div className="learning-path">
           <h2>Learning Path</h2>
           <div className="timeline">
@@ -132,28 +116,31 @@ export default function Dbms() {
               <motion.div key={index} className="timeline-item">
                 <div className="timeline-dot"></div>
                 <div className="mission-card">
-                  <div className="mission-header" onClick={() => toggleDropdown(index)} style={{cursor: 'pointer'}}>
-                    <span>{mission.title}</span>
-                    <motion.button
-                      className="dropdown-btn"
-                      animate={{ rotate: openIndex === index ? 180 : 0 }}
-                    >
-                      ▼
-                    </motion.button>
+                  <div className="mission-header" onClick={() => toggleDropdown(index)}>
+                    <div className="header-info">
+                      <span className="mission-title">{mission.title}</span>
+                      {/* Show completion badge if mastery > 80% */}
+                      {masteryData[mission.id] > 0.8 && <span className="certified">COMPLETED</span>}
+                    </div>
+                    <motion.button animate={{ rotate: openIndex === index ? 180 : 0 }}>▼</motion.button>
                   </div>
 
                   <AnimatePresence>
                     {openIndex === index && (
-                      <motion.div className="mission-content">
-                        {mission.topics.map((topic, topicIndex) => (
-                          <div key={topicIndex} className="topic-row">
-                            <span>{topic}</span>
-                            {/* Updated Button to Launch Mission */}
-                            <button
-                              className="launch-btn"
-                              onClick={() => handleLaunchMission(topic)}
-                            >
-                              Launch Mission 🚀
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="mission-content"
+                      >
+                        {mission.topics.map((topic, tIdx) => (
+                          <div key={tIdx} className="topic-row">
+                            <div className="topic-name">
+                                <span className="status-dot"></span>
+                                {topic}
+                            </div>
+                            <button className="launch-btn" onClick={() => handleLaunchMission(topic)}>
+                              Execute ⚡
                             </button>
                           </div>
                         ))}
