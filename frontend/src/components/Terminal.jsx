@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import useGameStore from '../store/useGameStore';
-import { sendQuery } from "../services/mockApi";
 import './Terminal.css';
 
 const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 'clear'];
