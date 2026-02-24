@@ -4,7 +4,8 @@ const API_BASE_URL = 'http://localhost:8000/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 10000
 });
 
 // --- THE INTERCEPTOR ---
@@ -18,6 +19,21 @@ apiClient.interceptors.request.use((config) => {
 }, (error) => {
   return Promise.reject(error);
 });
+
+// Optional response safety
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+    } else if (error.request) {
+      console.error("No response from backend.");
+    } else {
+      console.error("Request setup error:", error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const gameApi = {
   // --- AUTH ENTRIES ---
@@ -54,3 +70,5 @@ export const gameApi = {
   getNextRecommendation: () => 
     apiClient.get('/game/user/next'),
 };
+
+export default apiClient;

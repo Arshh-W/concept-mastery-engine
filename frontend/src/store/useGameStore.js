@@ -49,7 +49,7 @@ const insertAndSplit = (node, val) => {
 
 const useGameStore = create((set, get) => ({
     // --- CONNECTION STATE ---
-    backendMode: true, // Toggle this to false for offline testing
+    backendMode: true,
     sessionId: null,
     user: null,
 
@@ -76,7 +76,9 @@ const useGameStore = create((set, get) => ({
         type: "server",
         children: [
             { 
-                id: "db-1", name: "Ecommerce_DB", type: "database",
+                id: "db-1",
+                name: "Ecommerce_DB",
+                type: "database",
                 tables: [
                     { name: "Users", rows: 150, columns: ["id", "name", "email"] },
                     { name: "Orders", rows: 45, columns: ["id", "user_id", "total"] }
@@ -103,25 +105,28 @@ const useGameStore = create((set, get) => ({
 
     updateBTree: async (newValue) => {
         const val = parseInt(newValue);
+        if (isNaN(val)) return;
+
         const { backendMode, bTreeData, completeGoal, logEvent, sessionId } = get();
 
-        if (backendMode) {
+        if (backendMode && sessionId) {
             try {
-                // Real call to Python Backend
                 const response = await gameApi.submitAction(sessionId, 'INSERT', val);
-                
-                // We update our local state with whatever the Backend B-Tree looks like now
-                set({ 
-                    bTreeData: response.data.tree_state, 
-                    xp: response.data.total_xp || get().xp 
-                });
 
-                logEvent(`Remote Kernel: Key ${val} indexed.`, "success");
-                if (response.data.did_split) completeGoal(1);
+                if (response?.data) {
+                    set({ 
+                        bTreeData: response.data.tree_state || bTreeData,
+                        xp: response.data.total_xp ?? get().xp
+                    });
 
+                    logEvent(`Remote Kernel: Key ${val} indexed.`, "success");
+
+                    if (response.data.did_split) {
+                        completeGoal(1);
+                    }
+                }
             } catch (err) {
                 logEvent("Backend unreachable. Falling back to local simulation.", "error");
-                // Local Fallback
                 const newTree = JSON.parse(JSON.stringify(bTreeData));
                 const updated = insertAndSplit(newTree, val);
                 set({ bTreeData: updated });
@@ -130,19 +135,26 @@ const useGameStore = create((set, get) => ({
             const newTree = JSON.parse(JSON.stringify(bTreeData));
             const updated = insertAndSplit(newTree, val);
             set({ bTreeData: updated });
-            if (updated.children && updated.children.length > 0) completeGoal(1);
+
+            if (updated.children && updated.children.length > 0) {
+                completeGoal(1);
+            }
         }
     },
 
     searchKey: async (key) => {
         const val = parseInt(key);
+        if (isNaN(val)) return;
+
         const { bTreeData, completeGoal, logEvent } = get();
         const searchPath = [];
 
         const traverse = (node) => {
             if (!node) return;
             searchPath.push(node.id);
+
             if (node.values?.includes(val)) return;
+
             if (node.children) {
                 let idx = node.values.findIndex(v => val < v);
                 if (idx === -1) idx = node.values.length;
@@ -153,7 +165,7 @@ const useGameStore = create((set, get) => ({
         traverse(bTreeData);
 
         logEvent(`Initializing index scan for key: ${val}...`, "info");
-        
+
         for (let i = 0; i < searchPath.length; i++) {
             set({ highlightedNodes: searchPath.slice(0, i + 1) });
             await new Promise(r => setTimeout(r, 600));
@@ -168,7 +180,9 @@ const useGameStore = create((set, get) => ({
         if (goal && !goal.completed) {
             return {
                 xp: state.xp + goal.xp,
-                goals: state.goals.map(g => g.id === goalId ? { ...g, completed: true } : g)
+                goals: state.goals.map(g =>
+                    g.id === goalId ? { ...g, completed: true } : g
+                )
             };
         }
         return state;

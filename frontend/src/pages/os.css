@@ -232,6 +232,10 @@
   border-radius: 8px;
 }
 
+.topic-row span{
+  padding-left: 12px;
+}
+
 .complete-btn {
   background: #1e293b;
   border: 1px solid #334155;
