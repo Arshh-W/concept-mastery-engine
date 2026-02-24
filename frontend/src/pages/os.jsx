@@ -1,236 +1,143 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { gameApi } from "../services/api"; // Import the API
 import "./Os.css";
 
 export default function Os() {
+  const [openIndex, setOpenIndex] = useState(null);
+  const [masteryData, setMasteryData] = useState({}); // Real progress from backend
+  const navigate = useNavigate();
+
+  // 1. Fetch OS mastery on load
+  useEffect(() => {
+    const fetchMastery = async () => {
+      try {
+        const res = await gameApi.getMasteryChallenges('os');
+        setMasteryData(res.data.challenges || {});
+      } catch (err) {
+        console.error("Failed to fetch OS mastery stats", err);
+      }
+    };
+    fetchMastery();
+  }, []);
+
   const missionsData = [
     {
+      id: "os_fundamentals_1",
       title: "1. OS Fundamentals",
-      topics: [
-        "What is an Operating System?",
-        "Kernel vs User Mode",
-        "System Calls",
-        "OS Architecture (Monolithic Kernel)",
-        "OS Architecture (Microkernel)"
-      ]
+      topics: ["What is an Operating System?", "Kernel vs User Mode", "System Calls", "OS Architecture"]
     },
     {
+      id: "process_mgmt_2",
       title: "2. Process Management",
-      topics: [
-        "Process vs Program",
-        "Process States (New, Ready, Running, Waiting, Terminated)",
-        "Process Control Block (PCB)",
-        "Context Switching",
-        "CPU Scheduling - FCFS",
-        "CPU Scheduling - SJF",
-        "CPU Scheduling - Priority",
-        "CPU Scheduling - Round Robin",
-        "Gantt Chart Visualization",
-        "Waiting Time Calculation",
-        "Turnaround Time Calculation"
-      ]
+      topics: ["Process vs Program", "Process States", "Context Switching", "CPU Scheduling - FCFS", "Round Robin"]
     },
     {
+      id: "memory_mgmt_3",
       title: "3. Memory Management",
-      topics: [
-        "Contiguous Memory Allocation",
-        "Internal Fragmentation",
-        "External Fragmentation",
-        "First Fit Algorithm",
-        "Best Fit Algorithm",
-        "Worst Fit Algorithm",
-        "Compaction",
-        "Paging",
-        "Segmentation",
-        "Virtual Memory",
-        "Page Replacement - FIFO",
-        "Page Replacement - LRU",
-        "Page Replacement - Optimal",
-        "Page Faults",
-        "TLB (Translation Lookaside Buffer)"
-      ]
+      topics: ["Contiguous Allocation", "Paging", "Segmentation", "Virtual Memory", "Page Replacement - LRU"]
     },
     {
+      id: "sync_4",
       title: "4. Synchronization & Concurrency",
-      topics: [
-        "Critical Section Problem",
-        "Race Conditions",
-        "Mutex",
-        "Semaphores",
-        "Producer-Consumer Problem",
-        "Readers-Writers Problem",
-        "Deadlock",
-        "Banker's Algorithm",
-        "Resource Allocation Graph"
-      ]
+      topics: ["Critical Section", "Mutex", "Semaphores", "Deadlock", "Banker's Algorithm"]
     },
     {
+      id: "file_systems_5",
       title: "5. File Systems",
-      topics: [
-        "File Allocation Methods",
-        "Inodes",
-        "Disk Scheduling - FCFS",
-        "Disk Scheduling - SSTF",
-        "Disk Scheduling - SCAN",
-        "Disk Scheduling - C-SCAN"
-      ]
+      topics: ["Inodes", "Disk Scheduling - FCFS", "SCAN", "C-SCAN"]
     }
   ];
 
-  const [openIndex, setOpenIndex] = useState(null);
-  const [completed, setCompleted] = useState({});
+  // 2. Launch Mission logic linked to API
+  const handleLaunchMission = async (topic) => {
+    const moduleSlug = topic.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
+    
+    try {
+      // Notify backend to start BKT tracking for this session
+      await gameApi.startSession('os', moduleSlug);
+      navigate(`/game/os/${moduleSlug}`);
+    } catch (err) {
+      console.warn("Backend offline, entering practice mode.");
+      navigate(`/game/os/${moduleSlug}`);
+    }
+  };
 
   const toggleDropdown = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const toggleComplete = (missionIndex, topicIndex) => {
-    const key = `${missionIndex}-${topicIndex}`;
-    setCompleted((prev) => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  const totalTopics = missionsData.reduce(
-    (acc, mission) => acc + mission.topics.length,
-    0
-  );
-
-  const completedCount = Object.values(completed).filter(Boolean).length;
-  const progressPercent = Math.round((completedCount / totalTopics) * 100);
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 60 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
+  // Calculate progress based on masteryData from API
+  const totalMissions = missionsData.length;
+  const completedMissions = missionsData.filter(m => masteryData[m.id] >= 0.8).length;
+  const progressPercent = Math.round((completedMissions / totalMissions) * 100);
 
   return (
     <>
       <Navbar />
+      <motion.div className="os-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        
+        <div className="os-hero">
+          <h1>Operating <span>System</span></h1>
+          <p>Master the kernel internals and resource management.</p>
+        </div>
 
-      <motion.div
-        className="os-page"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        <motion.div className="os-hero" variants={fadeUp}>
-          <h1>
-            Operating <span>System</span>
-          </h1>
-          <p>
-            Master core OS concepts including processes, memory management,
-            scheduling, synchronization, kernel architecture, and system internals.
-          </p>
-        </motion.div>
-
-        <motion.div className="os-progress-card" variants={fadeUp}>
+        {/* Dynamic Progress Card */}
+        <div className="os-progress-card">
           <div className="os-progress-header">
-            <h3>Overall Progress</h3>
-            <span>
-              {completedCount} of {totalTopics} Completed
-            </span>
+            <h3>Kernel Synchronization</h3>
+            <span>{completedMissions} of {totalMissions} Sectors Secured</span>
           </div>
-
           <div className="progress-bar">
             <motion.div
               className="progress-fill"
               animate={{ width: `${progressPercent}%` }}
-              transition={{ duration: 0.8 }}
+              style={{ background: "#00e5ff", boxShadow: "0 0 10px #00e5ff" }}
             />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div className="learning-path" variants={fadeUp}>
+        <div className="learning-path">
           <h2>Learning Path</h2>
-
           <div className="timeline">
             {missionsData.map((mission, index) => (
-              <motion.div
-                key={index}
-                className="timeline-item"
-                variants={fadeUp}
-              >
-                <div className="timeline-dot"></div>
-
+              <div key={index} className="timeline-item">
+                <div className="timeline-dot" style={{ borderColor: masteryData[mission.id] >= 0.8 ? "#00e5ff" : "#444" }}></div>
                 <div className="mission-card">
-                  <div className="mission-header">
-                    <span>{mission.title}</span>
-
-                    <motion.button
-                      className="dropdown-btn"
-                      onClick={() => toggleDropdown(index)}
-                      animate={{ rotate: openIndex === index ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      ▼
-                    </motion.button>
+                  <div className="mission-header" onClick={() => toggleDropdown(index)} style={{ cursor: 'pointer' }}>
+                    <div className="header-info">
+                      <span className="mission-title">{mission.title}</span>
+                      {masteryData[mission.id] >= 0.8 && <span className="certified">SECURED</span>}
+                    </div>
+                    <motion.button animate={{ rotate: openIndex === index ? 180 : 0 }}>▼</motion.button>
                   </div>
 
                   <AnimatePresence>
                     {openIndex === index && (
-                      <motion.div
-                        className="mission-content"
+                      <motion.div 
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4 }}
-                        style={{ overflow: "hidden" }}
+                        className="mission-content"
                       >
-                        {mission.topics.map((topic, topicIndex) => {
-                          const key = `${index}-${topicIndex}`;
-                          const isDone = completed[key];
-
-                          return (
-                            <motion.div
-                              key={topicIndex}
-                              className="topic-row"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: topicIndex * 0.05 }}
-                            >
-                              <span>{topic}</span>
-
-                              <button
-                                className={`complete-btn ${
-                                  isDone ? "done" : ""
-                                }`}
-                                onClick={() =>
-                                  toggleComplete(index, topicIndex)
-                                }
-                              >
-                                {isDone
-                                  ? "Completed ✓"
-                                  : "Mark as Complete"}
-                              </button>
-                            </motion.div>
-                          );
-                        })}
+                        {mission.topics.map((topic, tIdx) => (
+                          <div key={tIdx} className="topic-row">
+                            <span className="topic-name">{topic}</span>
+                            <button className="launch-btn os-theme" onClick={() => handleLaunchMission(topic)}>
+                              Execute ⚡
+                            </button>
+                          </div>
+                        ))}
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </>
   );
