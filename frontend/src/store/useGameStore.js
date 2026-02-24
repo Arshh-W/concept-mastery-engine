@@ -64,7 +64,7 @@ const insertAndSplit = (node, val) => {
         node.children = [
         { 
             id: Math.random(), 
-            name: `P_LEFT_${midVal}`, // Shorter name
+            name: `P_LEFT_${midVal}`, 
             type: 'database', 
             values: leftVals, 
             tables: [{ name: "Users", rows: 10, columns: ["id", "val"] }],
@@ -72,7 +72,7 @@ const insertAndSplit = (node, val) => {
         },
         { 
             id: Math.random(), 
-            name: `P_RIGHT_${midVal}`, // Shorter name
+            name: `P_RIGHT_${midVal}`, 
             type: 'database', 
             values: rightVals, 
             tables: [{ name: "Logs", rows: 5, columns: ["id", "val"] }],
@@ -86,7 +86,7 @@ const insertAndSplit = (node, val) => {
 const useGameStore = create((set, get) => ({
     backendMode: false,
     xp: 0,
-    highlightedNodes: [], // Fixed: Added initialization to prevent .includes() crash
+    highlightedNodes: [], 
     
     // --- MISSION DATA ---
     goals: [
