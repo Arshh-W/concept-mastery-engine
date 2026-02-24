@@ -11,11 +11,16 @@ const Terminal = () => {
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
     
-    // Pulling all necessary actions from Zustand
+    // Destructure with default values to prevent "undefined" crashes
     const { 
-        commandHistory, addCommand, logEvent, 
-        setMemoryFromBackend, updateBTree, searchKey, 
-        completeGoal, updateXP, bTreeData 
+        commandHistory = [], 
+        addCommand, 
+        logEvent, 
+        setMemoryFromBackend, 
+        updateBTree, 
+        searchKey, 
+        completeGoal, 
+        clearHistory 
     } = useGameStore();
     
     const terminalEndRef = useRef(null);
@@ -28,7 +33,7 @@ const Terminal = () => {
         if (e.key === 'Enter') {
             processCommand();
         } else if (e.key === 'ArrowUp') {
-            if (historyIndex < commandHistory.length - 1) {
+            if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
                 const newIndex = historyIndex + 1;
                 setHistoryIndex(newIndex);
                 setInput(commandHistory[commandHistory.length - 1 - newIndex].cmd);
@@ -47,14 +52,15 @@ const Terminal = () => {
         const [action, value] = trimmedInput.split(' ');
         const cmd = action.toUpperCase();
 
-        // 1. Handle "Local" UI Commands
+        // 1. Handle CLEAR
         if (cmd === 'CLEAR') {
-        useGameStore.getState().clearHistory(); // Wipe the history in the store
-        setInput('');
-        setHistoryIndex(-1);
-        return; 
-    }
-        // 2. Handle DBMS Domain Logic
+            clearHistory();
+            setInput('');
+            setHistoryIndex(-1);
+            return;
+        }
+
+        // 2. Handle DBMS
         if (domain === 'dbms') {
             if (cmd === 'INSERT') {
                 if (!isNaN(value)) {
@@ -62,8 +68,9 @@ const Terminal = () => {
                     logEvent(`Index update: Key ${value} inserted.`, "success");
                     addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
                     
-                    // Check for Root Split Goal
-                    if (bTreeData.children && bTreeData.children.length > 0) {
+                    // GET LATEST TREE STATE TO CHECK GOAL
+                    const latestTree = useGameStore.getState().bTreeData;
+                    if (latestTree.children && latestTree.children.length > 0) {
                         completeGoal(1);
                     }
                 } else {
@@ -78,24 +85,25 @@ const Terminal = () => {
                 } else {
                     addCommand(trimmedInput, "ERROR: SELECT requires a search key.");
                 }
-            }
-            else {
+            } else {
                 addCommand(trimmedInput, `Unknown DBMS command: ${cmd}`);
             }
         }
 
-        // 3. Handle OS Domain Logic (API Driven)
+        // 3. Handle OS
         else if (domain === 'os') {
-            const response = await sendQuery(trimmedInput);
-            if (response.status === "success") {
-                if (response.memory) {
-                    setMemoryFromBackend(response.memory);
+            try {
+                const response = await sendQuery(trimmedInput);
+                if (response.status === "success") {
+                    if (response.memory) setMemoryFromBackend(response.memory);
+                    logEvent(response.message, "success");
+                    addCommand(trimmedInput, response.message);
+                } else {
+                    logEvent(response.message, "error");
+                    addCommand(trimmedInput, response.message);
                 }
-                logEvent(response.message, "success");
-                addCommand(trimmedInput, response.message);
-            } else {
-                logEvent(response.message, "error");
-                addCommand(trimmedInput, response.message);
+            } catch (err) {
+                addCommand(trimmedInput, "CRITICAL: Backend connection failed.");
             }
         }
 
@@ -106,7 +114,8 @@ const Terminal = () => {
     return (
         <div className="terminal-wrapper">
             <div className="terminal-output">
-                {commandHistory.map((item, index) => (
+                {/* Safe mapping with optional chaining */}
+                {commandHistory?.map((item, index) => (
                     <div key={index} className="terminal-line">
                         <span className="prompt">conqueror@root:~$</span> {item.cmd}
                         <div className="output-text">{item.output}</div>
@@ -118,6 +127,7 @@ const Terminal = () => {
                 <span className="prompt">conqueror@root:~$</span>
                 <input
                     autoFocus
+                    autoComplete="off"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
