@@ -232,6 +232,10 @@
   border-radius: 8px;
 }
 
+.topic-row span{
+  padding-left: 12px;
+}
+
 .complete-btn {
   background: #1e293b;
   border: 1px solid #334155;
@@ -277,4 +281,184 @@
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Container & Background */
+.os-page {
+  min-height: 100vh;
+  background-color: #0a0a0c;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 132, 0, 0.1) 0%, transparent 50%),
+    linear-gradient(rgba(18, 18, 23, 0.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 18, 23, 0.8) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  padding: 100px 20px 40px;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Hero Section */
+.dbms-hero {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.dbms-hero h1 {
+  font-size: 2.5rem;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(255, 132, 0, 0.6);
+  margin-bottom: 10px;
+}
+
+.dbms-hero p {
+  color: #888;
+  font-size: 1rem;
+}
+
+/* Learning Path Timeline */
+.learning-path {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.learning-path h2 {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #ff8400;
+  text-transform: uppercase;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  border-left: 2px dashed rgba(255, 132, 0, 0.3);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -41px;
+  top: 25px;
+  width: 20px;
+  height: 20px;
+  background: #0a0a0c;
+  border: 2px solid #ff8400;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ff8400;
+  z-index: 2;
+}
+
+/* Mission Card */
+.mission-card {
+  background: rgba(25, 25, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: border 0.3s ease;
+}
+
+.mission-card:hover {
+  border-color: rgba(255, 132, 0, 0.3);
+}
+
+.mission-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: linear-gradient(90deg, rgba(255, 132, 0, 0.05) 0%, transparent 100%);
+}
+
+.mission-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.mission-header button {
+  background: transparent;
+  border: none;
+  color: #ff8400;
+  font-size: 0.8rem;
+}
+
+/* Completion Badge */
+.certified {
+  margin-left: 15px;
+  font-size: 0.65rem;
+  background: rgba(0, 229, 255, 0.1);
+  color: #00e5ff;
+  padding: 4px 8px;
+  border: 1px solid #00e5ff;
+  border-radius: 4px;
+  text-shadow: 0 0 5px #00e5ff;
+}
+
+/* Accordion Content */
+.mission-content {
+  padding: 0 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.topic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.topic-row:last-child {
+  border-bottom: none;
+}
+
+.topic-name {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: #444;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+/* Launch Button */
+.launch-btn {
+  background: rgba(255, 132, 0, 0.1);
+  border: 1px solid #ff8400;
+  color: #ff8400;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.launch-btn:hover {
+  background: #ff8400;
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 132, 0, 0.4);
+}
+
+/* Transitions */
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

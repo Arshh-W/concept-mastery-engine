@@ -32,9 +32,7 @@ export default function GameShell() {
             <MemoryMap />
           )}
           
-          <div className="module-tag">
-            SYSTEM_{domain?.toUpperCase()} // MISSION_{module?.toUpperCase()}
-          </div>
+          
         </div>
 
         <div className="right-panel">

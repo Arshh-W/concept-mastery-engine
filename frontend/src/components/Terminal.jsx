@@ -10,16 +10,19 @@ const Terminal = () => {
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
     
-    // Destructure with default values to prevent "undefined" crashes
+    // Destructure the new actions from the store
     const { 
         commandHistory = [], 
         addCommand, 
         logEvent, 
-        setMemoryFromBackend, 
         updateBTree, 
         searchKey, 
         completeGoal, 
-        clearHistory 
+        clearHistory,
+        memory,
+        allocateMemory, // From updated Store
+        freeMemory,     // From updated Store
+        syncMemory      // From updated Store
     } = useGameStore();
     
     const terminalEndRef = useRef(null);
@@ -27,6 +30,13 @@ const Terminal = () => {
     useEffect(() => {
         terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [commandHistory]);
+
+    // Sync memory state when switching to OS domain
+    useEffect(() => {
+        if (domain === 'os') {
+            syncMemory();
+        }
+    }, [domain, syncMemory]);
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -48,10 +58,11 @@ const Terminal = () => {
         const trimmedInput = input.trim();
         if (!trimmedInput) return;
 
-        const [action, value] = trimmedInput.split(' ');
+        const parts = trimmedInput.split(' ');
+        const action = parts[0];
+        const value = parts[1];
         const cmd = action.toUpperCase();
 
-        // 1. Handle CLEAR
         if (cmd === 'CLEAR') {
             clearHistory();
             setInput('');
@@ -59,50 +70,58 @@ const Terminal = () => {
             return;
         }
 
-        // 2. Handle DBMS
+        // --- DBMS DOMAIN ---
         if (domain === 'dbms') {
             if (cmd === 'INSERT') {
                 if (!isNaN(value)) {
                     await updateBTree(value);
-                    logEvent(`Index update: Key ${value} inserted.`, "success");
                     addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
-                    
-                    // GET LATEST TREE STATE TO CHECK GOAL
-                    const latestTree = useGameStore.getState().bTreeData;
-                    if (latestTree.children && latestTree.children.length > 0) {
-                        completeGoal(1);
-                    }
                 } else {
                     addCommand(trimmedInput, "ERROR: INSERT requires a numeric key.");
                 }
             } 
             else if (cmd === 'SELECT') {
-                if (value) {
-                    logEvent(`Searching for Key: ${value}...`, "info");
+                if (!isNaN(value)) {
                     await searchKey(value);
                     addCommand(trimmedInput, `Search completed for Key ${value}.`);
                 } else {
-                    addCommand(trimmedInput, "ERROR: SELECT requires a search key.");
+                    addCommand(trimmedInput, "ERROR: SELECT requires a numeric key.");
                 }
-            } else {
-                addCommand(trimmedInput, `Unknown DBMS command: ${cmd}`);
-            }
+            } 
         }
 
-        // 3. Handle OS
+        // --- OS DOMAIN (Cleaned up to use Store actions) ---
         else if (domain === 'os') {
-            try {
-                const response = await sendQuery(trimmedInput);
-                if (response.status === "success") {
-                    if (response.memory) setMemoryFromBackend(response.memory);
-                    logEvent(response.message, "success");
-                    addCommand(trimmedInput, response.message);
+            if (cmd === 'ALLOC') {
+                const size = parseInt(value);
+                const name = parts[2] || `P${memory.blocks.length + 1}`;
+
+                if (!isNaN(size)) {
+                    const result = await allocateMemory(size, name);
+                    if (result.success) {
+                        addCommand(trimmedInput, `Allocated ${size}MB successfully.`);
+                    } else {
+                        addCommand(trimmedInput, `ERROR: ${result.error}`);
+                    }
                 } else {
-                    logEvent(response.message, "error");
-                    addCommand(trimmedInput, response.message);
+                    addCommand(trimmedInput, "ERROR: alloc requires a numeric value.");
                 }
-            } catch (err) {
-                addCommand(trimmedInput, "CRITICAL: Backend connection failed.");
+            }
+
+            else if (cmd === 'FREE') {
+                if (value) {
+                    const result = await freeMemory(value);
+                    if (result.success) {
+                        addCommand(trimmedInput, `Freed memory block ${value}.`);
+                    } else {
+                        addCommand(trimmedInput, `ERROR: ${result.error}`);
+                    }
+                } else {
+                    addCommand(trimmedInput, "ERROR: Provide a block name.");
+                }
+            }
+            else {
+                addCommand(trimmedInput, `Unknown OS command: ${cmd}`);
             }
         }
 
@@ -113,7 +132,6 @@ const Terminal = () => {
     return (
         <div className="terminal-wrapper">
             <div className="terminal-output">
-                {/* Safe mapping with optional chaining */}
                 {commandHistory?.map((item, index) => (
                     <div key={index} className="terminal-line">
                         <span className="prompt">conqueror@root:~$</span> {item.cmd}
@@ -122,6 +140,7 @@ const Terminal = () => {
                 ))}
                 <div ref={terminalEndRef} />
             </div>
+
             <div className="input-line">
                 <span className="prompt">conqueror@root:~$</span>
                 <input
@@ -130,7 +149,7 @@ const Terminal = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={`Type ${domain === 'dbms' ? 'INSERT [val]' : 'alloc [val]'}...`}
+                    placeholder={`Type ${domain === 'dbms' ? 'INSERT [val]' : 'alloc [val] [name]'}...`}
                 />
             </div>
         </div>
