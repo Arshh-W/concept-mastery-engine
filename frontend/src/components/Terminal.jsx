@@ -9,24 +9,34 @@ const Terminal = () => {
     const { domain } = useParams();
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
-
-    // Destructure with default values to prevent "undefined" crashes
-    const {
-        commandHistory = [],
-        addCommand,
-        logEvent,
-        setMemoryFromBackend,
-        updateBTree,
-        searchKey,
-        completeGoal,
-        clearHistory
+    
+    // Destructure the new actions from the store
+    const { 
+        commandHistory = [], 
+        addCommand, 
+        logEvent, 
+        updateBTree, 
+        searchKey, 
+        completeGoal, 
+        clearHistory,
+        memory,
+        allocateMemory, // From updated Store
+        freeMemory,     // From updated Store
+        syncMemory      // From updated Store
     } = useGameStore();
-
+    
     const terminalEndRef = useRef(null);
 
     useEffect(() => {
         terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [commandHistory]);
+
+    // Sync memory state when switching to OS domain
+    useEffect(() => {
+        if (domain === 'os') {
+            syncMemory();
+        }
+    }, [domain, syncMemory]);
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -53,7 +63,6 @@ const Terminal = () => {
         const value = parts[1];
         const cmd = action.toUpperCase();
 
-        // 1. Handle CLEAR
         if (cmd === 'CLEAR') {
             clearHistory();
             setInput('');
@@ -61,63 +70,38 @@ const Terminal = () => {
             return;
         }
 
-        // 2. Handle DBMS
+        // --- DBMS DOMAIN ---
         if (domain === 'dbms') {
             if (cmd === 'INSERT') {
                 if (!isNaN(value)) {
                     await updateBTree(value);
-                    logEvent(`Index update: Key ${value} inserted.`, "success");
                     addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
-
-                    const latestTree = useGameStore.getState().bTreeData;
-                    if (latestTree.children && latestTree.children.length > 0) {
-                        completeGoal(1);
-                    }
                 } else {
                     addCommand(trimmedInput, "ERROR: INSERT requires a numeric key.");
                 }
-            }
+            } 
             else if (cmd === 'SELECT') {
                 if (!isNaN(value)) {
-                    logEvent(`Searching for Key: ${value}...`, "info");
                     await searchKey(value);
                     addCommand(trimmedInput, `Search completed for Key ${value}.`);
                 } else {
                     addCommand(trimmedInput, "ERROR: SELECT requires a numeric key.");
                 }
-            }
-            else {
-                addCommand(trimmedInput, `Unknown DBMS command: ${cmd}`);
-            }
+            } 
         }
 
-        // 3. Handle OS (LOCAL SIMULATION)
+        // --- OS DOMAIN (Cleaned up to use Store actions) ---
         else if (domain === 'os') {
-            const store = useGameStore.getState();
-            const currentMemory = store.memory;
-
             if (cmd === 'ALLOC') {
-                if (!isNaN(value)) {
-                    const size = parseInt(value);
+                const size = parseInt(value);
+                const name = parts[2] || `P${memory.blocks.length + 1}`;
 
-                    if (currentMemory.heapUsed + size <= currentMemory.total) {
-                        const newBlock = {
-                            id: Date.now(),
-                            size,
-                            name: parts[2] || `P${currentMemory.blocks.length + 1}`
-                        };
-
-                        const updatedMemory = {
-                            ...currentMemory,
-                            heapUsed: currentMemory.heapUsed + size,
-                            blocks: [...currentMemory.blocks, newBlock]
-                        };
-
-                        setMemoryFromBackend(updatedMemory);
-                        logEvent(`Allocated ${size}MB successfully.`, "success");
+                if (!isNaN(size)) {
+                    const result = await allocateMemory(size, name);
+                    if (result.success) {
                         addCommand(trimmedInput, `Allocated ${size}MB successfully.`);
                     } else {
-                        addCommand(trimmedInput, "ERROR: Not enough memory.");
+                        addCommand(trimmedInput, `ERROR: ${result.error}`);
                     }
                 } else {
                     addCommand(trimmedInput, "ERROR: alloc requires a numeric value.");
@@ -125,27 +109,15 @@ const Terminal = () => {
             }
 
             else if (cmd === 'FREE') {
-                const blockName = value;
-                // CHANGED: Use .toLowerCase() on both sides for case-insensitive matching
-                const block = currentMemory.blocks.find(
-                    (b) => b.name.toLowerCase() === blockName.toLowerCase()
-                );
-
-                if (block) {
-                    const updatedMemory = {
-                        ...currentMemory,
-                        heapUsed: currentMemory.heapUsed - block.size,
-                        // CHANGED: Filter also needs to be case-insensitive
-                        blocks: currentMemory.blocks.filter(
-                            (b) => b.name.toLowerCase() !== blockName.toLowerCase()
-                        )
-                    };
-
-                    setMemoryFromBackend(updatedMemory);
-                    logEvent(`Freed memory block ${block.name}.`, "info");
-                    addCommand(trimmedInput, `Freed memory block ${block.name}.`);
+                if (value) {
+                    const result = await freeMemory(value);
+                    if (result.success) {
+                        addCommand(trimmedInput, `Freed memory block ${value}.`);
+                    } else {
+                        addCommand(trimmedInput, `ERROR: ${result.error}`);
+                    }
                 } else {
-                    addCommand(trimmedInput, `ERROR: Block "${blockName}" not found.`);
+                    addCommand(trimmedInput, "ERROR: Provide a block name.");
                 }
             }
             else {
@@ -160,7 +132,6 @@ const Terminal = () => {
     return (
         <div className="terminal-wrapper">
             <div className="terminal-output">
-                {/* Safe mapping with optional chaining */}
                 {commandHistory?.map((item, index) => (
                     <div key={index} className="terminal-line">
                         <span className="prompt">conqueror@root:~$</span> {item.cmd}

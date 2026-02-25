@@ -101,6 +101,52 @@ const useGameStore = create((set, get) => ({
         commandHistory: [...state.commandHistory, { cmd, output, timestamp: new Date() }]
     })),
 
+    // --- OS / MEMORY ACTIONS ---
+    
+    syncMemory: async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/memory/status');
+            const data = await response.json();
+            if (response.ok) set({ memory: data.memory });
+        } catch (err) {
+            get().logEvent("Failed to sync memory with backend.", "error");
+        }
+    },
+
+    allocateMemory: async (size, name) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/memory/allocate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ size, name })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                set({ memory: data.memory });
+                return { success: true };
+            }
+            return { success: false, error: data.error };
+        } catch (err) {
+            return { success: false, error: "Backend unreachable" };
+        }
+    },
+
+    freeMemory: async (blockName) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/memory/free/${blockName}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            if (response.ok) {
+                set({ memory: data.memory });
+                return { success: true };
+            }
+            return { success: false, error: data.error };
+        } catch (err) {
+            return { success: false, error: "Backend unreachable" };
+        }
+    },
+
     // --- CORE ACTIONS (The Bridge to Backend) ---
 
     updateBTree: async (newValue) => {
