@@ -1,6 +1,5 @@
 """
-routes/game.py
-Handles game session lifecycle: listing challenges, starting sessions, stepping through actions, and ending sessions.
+Handles game session : listing challenges, starting sessions, stepping through actions, and ending sessions.
 """
 
 import secrets
@@ -9,9 +8,9 @@ from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify
 
 from database import SessionLocal
-from models   import GameSession, SimStateEnum
+from models   import GameSession, SimStateEnum, Challenge, Competency, User, Progress
 from auth_middleware import require_auth
-from services.challenge_service import (
+from challenge_service import (
     get_challenges_for_domain,
     get_challenge_by_slug,
     get_challenge_by_id,
@@ -339,10 +338,9 @@ def end_session(token_data, token: str):
 @require_auth
 def user_progress(token_data):
    #full dashboard data for the user: total exp, mastery map and completed challenges with scores and attempts for frontend
-    from models import User, Progress, Challenge as ChallengeModel, Competency, MasteryState
     db = SessionLocal()
     try:
-        user = db.query(User).get(token_data.user_id)
+        user = db.get(User, token_data.user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
 

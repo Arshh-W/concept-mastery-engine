@@ -57,7 +57,7 @@ class BKTModel:
         return p_posterior + (1.0 - p_posterior) * self.p_transit
 
     def bulk_update(self, p_mastery: float, results: list[bool]) -> float:
-        """Apply multiple observations in sequence."""
+        
         for correct in results:
             p_mastery = self.update(p_mastery, correct)
         return p_mastery
@@ -126,7 +126,7 @@ def get_next_recommended_competency(db: Session, user_id: int, domain: Optional[
     """
     DAG-aware next competency selection:
     1. this is a Filter to competencies, in which prerequisites are all mastered
-    2. Among those, we try to pick the one with lowest p_mastery (most attention needed here)
+    2. Among those, we try to pick the one with lowest p_mastery to encourage to focus on weaker sections
     """
     mastery_map = get_user_mastery_map(db, user_id)
     mastered    = {slug for slug, p in mastery_map.items() if p >= MASTERY_THRESHOLD}
@@ -178,10 +178,10 @@ def record_challenge_completion(
         prog.is_completed = True
         prog.first_completed_at = datetime.now(timezone.utc)
 
-        challenge = db.query(Challenge).get(challenge_id)
+        challenge = db.get(Challenge, challenge_id)
         exp_gained = challenge.exp_reward if challenge else 50
 
-        user = db.query(User).get(user_id)
+        user = db.get(User, user_id)
         if user:
             user.total_exp += exp_gained
 

@@ -74,5 +74,24 @@ class FeedbackService:
             hint="Try checking your parameters again."
         )
 
-#for the wrapper to call
-feedback_service = FeedbackService()
+class _GoalEvaluator:
+    def __init__(self, service: FeedbackService):
+        self._svc = service
+
+    def evaluate(self, goal: dict, sim_state: dict, action_result: dict = None) -> dict:
+        return self._svc.evaluate_goal(goal, sim_state)
+
+
+class _FeedbackEngine:
+    def __init__(self, service: FeedbackService):
+        self._svc = service
+
+    def generate(self, action: str, action_result: dict, sim_state: dict, goal: dict, goal_result: dict) -> str:
+        fb = self._svc.get_feedback(action, action_result, sim_state, goal)
+        return fb.message
+
+
+# for the wrapper to call
+feedback_service  = FeedbackService()
+goal_evaluator    = _GoalEvaluator(feedback_service)
+feedback_engine   = _FeedbackEngine(feedback_service)

@@ -23,7 +23,7 @@ def create_app():
 
 def _seed():
     #Seeding levles content from JSON files.
-    from services.challenge_service import seed_challenges
+    from challenge_service import seed_challenges
     db = SessionLocal()
     try:
         seed_challenges(db)
