@@ -3,26 +3,30 @@ import { useParams } from 'react-router-dom';
 import useGameStore from '../store/useGameStore';
 import './Terminal.css';
 
-const VALID_COMMANDS = ['alloc', 'free', 'compact', 'SELECT', 'INSERT', 'help', 'clear'];
+// Added new valid commands for schema manipulation
+const VALID_COMMANDS = [
+    'alloc', 'free', 'compact', 'SELECT', 'INSERT', 
+    'CREATE DATABASE', 'CREATE TABLE', 'DROP DATABASE', 'DROP TABLE', 
+    'help', 'clear'
+];
 
 const Terminal = () => {
     const { domain } = useParams();
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
     
-    // Destructure the new actions from the store
     const { 
         commandHistory = [], 
         addCommand, 
         logEvent, 
         updateBTree, 
         searchKey, 
-        completeGoal, 
+        executeDatabaseCommand, // New Action
         clearHistory,
         memory,
-        allocateMemory, // From updated Store
-        freeMemory,     // From updated Store
-        syncMemory      // From updated Store
+        allocateMemory, 
+        freeMemory,     
+        syncMemory      
     } = useGameStore();
     
     const terminalEndRef = useRef(null);
@@ -31,9 +35,8 @@ const Terminal = () => {
         terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [commandHistory]);
 
-    // Sync memory state when switching to OS domain
     useEffect(() => {
-        if (domain === 'os') {
+        if (domain === 'os' && syncMemory) {
             syncMemory();
         }
     }, [domain, syncMemory]);
@@ -54,16 +57,17 @@ const Terminal = () => {
         }
     };
 
-    const processCommand = async () => {
+ const processCommand = async () => {
         const trimmedInput = input.trim();
         if (!trimmedInput) return;
 
         const parts = trimmedInput.split(' ');
-        const action = parts[0];
-        const value = parts[1];
-        const cmd = action.toUpperCase();
+        const action = parts[0].toUpperCase();
+        const type = parts[1]?.toUpperCase();
+        const value = parts[1]; 
+        const name = parts[2];  
 
-        if (cmd === 'CLEAR') {
+        if (action === 'CLEAR') {
             clearHistory();
             setInput('');
             setHistoryIndex(-1);
@@ -72,56 +76,77 @@ const Terminal = () => {
 
         // --- DBMS DOMAIN ---
         if (domain === 'dbms') {
-            if (cmd === 'INSERT') {
+            //  Handle Schema Commands (CREATE/DROP)
+            if (action === 'CREATE' || action === 'DROP') {
+                if (!type || !parts[2]) {
+                    addCommand(trimmedInput, `ERROR: ${action} requires a type (DATABASE/TABLE) and a name.`);
+                } else {
+                    await executeDatabaseCommand(trimmedInput);
+                    addCommand(trimmedInput, `Executing ${action} ${type} operation...`);
+                }
+            } 
+            // Handle Context Switch (USE)
+            else if (action === 'USE') {
+                if (!parts[1]) {
+                    addCommand(trimmedInput, "ERROR: USE requires a database name.");
+                } else {
+                    await executeDatabaseCommand(trimmedInput); // This triggers the store logic we wrote
+                    addCommand(trimmedInput, `Context switched to: ${parts[1]}`);
+                }
+            }
+            // Handle Data Commands (INSERT)
+            else if (action === 'INSERT') {
                 if (!isNaN(value)) {
                     await updateBTree(value);
-                    addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
+                    addCommand(trimmedInput, `SUCCESS: Key ${value} written to disk.`);
                 } else {
                     addCommand(trimmedInput, "ERROR: INSERT requires a numeric key.");
                 }
             } 
-            else if (cmd === 'SELECT') {
+            //  Handle Search Commands (SELECT)
+            else if (action === 'SELECT') {
                 if (!isNaN(value)) {
                     await searchKey(value);
-                    addCommand(trimmedInput, `Search completed for Key ${value}.`);
+                    addCommand(trimmedInput, `Index Scan initiated for ID: ${value}.`);
                 } else {
                     addCommand(trimmedInput, "ERROR: SELECT requires a numeric key.");
                 }
             } 
+            else {
+                addCommand(trimmedInput, `Unknown DBMS command: ${action}`);
+            }
         }
-
-        // --- OS DOMAIN (Cleaned up to use Store actions) ---
+        // --- OS DOMAIN ---
         else if (domain === 'os') {
-            if (cmd === 'ALLOC') {
+            if (action === 'ALLOC') {
                 const size = parseInt(value);
-                const name = parts[2] || `P${memory.blocks.length + 1}`;
+                const blockName = parts[2] || `P${memory.blocks.length + 1}`;
 
                 if (!isNaN(size)) {
-                    const result = await allocateMemory(size, name);
+                    const result = await allocateMemory(size, blockName);
                     if (result.success) {
-                        addCommand(trimmedInput, `Allocated ${size}MB successfully.`);
+                        addCommand(trimmedInput, `Memory Map updated: ${size}MB assigned to ${blockName}.`);
                     } else {
-                        addCommand(trimmedInput, `ERROR: ${result.error}`);
+                        addCommand(trimmedInput, `SEGMENTATION FAULT: ${result.error}`);
                     }
                 } else {
-                    addCommand(trimmedInput, "ERROR: alloc requires a numeric value.");
+                    addCommand(trimmedInput, "ERROR: alloc requires a numeric size.");
                 }
             }
-
-            else if (cmd === 'FREE') {
+            else if (action === 'FREE') {
                 if (value) {
                     const result = await freeMemory(value);
                     if (result.success) {
-                        addCommand(trimmedInput, `Freed memory block ${value}.`);
+                        addCommand(trimmedInput, `Released memory block ${value}.`);
                     } else {
-                        addCommand(trimmedInput, `ERROR: ${result.error}`);
+                        addCommand(trimmedInput, `ERROR: Block ${value} not found.`);
                     }
                 } else {
-                    addCommand(trimmedInput, "ERROR: Provide a block name.");
+                    addCommand(trimmedInput, "ERROR: Provide a block name to free.");
                 }
             }
             else {
-                addCommand(trimmedInput, `Unknown OS command: ${cmd}`);
+                addCommand(trimmedInput, `Unknown Kernel command: ${action}`);
             }
         }
 
@@ -149,7 +174,11 @@ const Terminal = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={`Type ${domain === 'dbms' ? 'INSERT [val]' : 'alloc [val] [name]'}...`}
+                    placeholder={
+                        domain === 'dbms' 
+                        ? "INSERT [id] | CREATE DATABASE [name]..." 
+                        : "ALLOC [size] [name] | FREE [name]..."
+                    }
                 />
             </div>
         </div>

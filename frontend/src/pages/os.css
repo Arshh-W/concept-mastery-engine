@@ -462,3 +462,28 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.active-target {
+  border-left: 3px solid #ff8400 !important;
+  background: rgba(255, 132, 0, 0.05);
+}
+
+.writing-indicator {
+  color: #ff8400;
+  margin-right: 8px;
+  font-size: 10px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.live-status {
+  font-size: 0.6rem;
+  color: #ff8400;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
