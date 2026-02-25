@@ -149,6 +149,16 @@ const useGameStore = create((set, get) => ({
         const { dbSchema } = get();
         let newSchema = JSON.parse(JSON.stringify(dbSchema));
 
+        if (action === "ALLOC") {
+            const size = parts[1]; 
+            if (!size) return get().logEvent("ERROR: Specify allocation size (e.g., ALLOC 64MB)", "error");
+            
+            get().logEvent(`Memory Space Allocated: ${size}`, "success");
+            get().logEvent(`Initializing Virtual Pages...`, "info");
+            
+            return; 
+        }
+
         if (action === "CREATE") {
             const type = parts[1]?.toUpperCase();
             const name = parts[2];
