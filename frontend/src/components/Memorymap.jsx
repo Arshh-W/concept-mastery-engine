@@ -3,13 +3,7 @@ import useGameStore from "../store/useGameStore";
 
 const generateColor = (index) => {
   const colors = [
-    "#ff6b6b",
-    "#feca57",
-    "#48dbfb",
-    "#1dd1a1",
-    "#5f27cd",
-    "#ff9ff3",
-    "#00d2d3"
+    "#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd", "#ff9ff3", "#00d2d3"
   ];
   return colors[index % colors.length];
 };
@@ -17,19 +11,33 @@ const generateColor = (index) => {
 const MemoryMap = () => {
   const { memory } = useGameStore();
 
-  const usagePercent = (memory.heapUsed / memory.total) * 100;
-  const freeMemory = memory.total - memory.heapUsed;
+  // 1. GUARD CLAUSE: If memory is undefined (due to backend error), 
+  // show a fallback UI instead of crashing.
+  if (!memory || !memory.blocks) {
+    return (
+      <div style={{ padding: "20px", color: "#777" }}>
+        <h1>Memory Map</h1>
+        <p>Waiting for memory data... (Check backend connection)</p>
+      </div>
+    );
+  }
+
+  // 2. SAFE CALCULATIONS: Using default values to prevent NaN
+  const total = memory.total || 1; // Prevent division by zero
+  const heapUsed = memory.heapUsed || 0;
+  const usagePercent = (heapUsed / total) * 100;
+  const freeMemory = total - heapUsed;
 
   return (
     <div style={{ padding: "20px", color: "white" }}>
       <h1 style={{ marginBottom: "10px" }}>Memory Map</h1>
 
       <div style={{ fontSize: "18px", marginBottom: "5px" }}>
-        Total Memory: <strong>{memory.total} MB</strong>
+        Total Memory: <strong>{total} MB</strong>
       </div>
 
       <div style={{ fontSize: "18px", marginBottom: "20px" }}>
-        Heap Used: <strong>{memory.heapUsed} MB</strong>
+        Heap Used: <strong>{heapUsed} MB</strong>
       </div>
 
       {/* Main Memory Bar */}
@@ -50,7 +58,7 @@ const MemoryMap = () => {
             <div
               key={block.id}
               style={{
-                width: `${(block.size / memory.total) * 100}%`,
+                width: `${(block.size / total) * 100}%`,
                 background: generateColor(index),
                 display: "flex",
                 alignItems: "center",
@@ -76,7 +84,6 @@ const MemoryMap = () => {
           )}
         </div>
         
-        {/* Memory Info text moved below the bar to prevent overlapping */}
         <div style={{ marginTop: "8px", color: "#aaa", fontSize: "12px" }}>
           Free Memory: {freeMemory} MB
         </div>
@@ -105,7 +112,6 @@ const MemoryMap = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                // FIXED SIZE: These will no longer grow or shrink
                 width: "180px", 
                 flex: "0 0 auto", 
                 border: "1px solid #333",

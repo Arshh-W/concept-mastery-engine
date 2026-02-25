@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { gameApi } from '../services/api';
 
-
+// --- HELPER: B-TREE LOGIC ---
 const insertAndSplit = (node, val) => {
     if (!node) return { id: Math.random(), values: [val], children: null };
 
@@ -51,6 +51,7 @@ const insertAndSplit = (node, val) => {
     return node;
 };
 
+// --- STORE DEFINITION ---
 const useGameStore = create((set, get) => ({
     // --- STATE ---
     backendMode: true,
@@ -59,7 +60,8 @@ const useGameStore = create((set, get) => ({
     goals: [
         { id: 1, text: "Insert keys to trigger a root split", completed: false, xp: 50 },
         { id: 2, text: "Perform a SELECT query with traversal highlight", completed: false, xp: 50 },
-        { id: 4, text: "Create a custom Production Database", completed: false, xp: 75 }
+        { id: 4, text: "Create a custom Production Database", completed: false, xp: 75 },
+        { id: 5, text: "Allocate a memory block over 100MB", completed: false, xp: 40 }
     ],
     highlightedNodes: [],
     currentEventLog: [],
@@ -75,6 +77,13 @@ const useGameStore = create((set, get) => ({
         ]
     },
     bTreeData: { id: "root", values: [50], children: null },
+    
+    // Memory state initialized to prevent undefined errors in UI
+    memory: {
+        total: 1024,
+        heapUsed: 0,
+        blocks: []
+    },
 
     // --- ACTIONS ---
     logEvent: (message, type = 'info') => set((state) => ({
@@ -95,18 +104,85 @@ const useGameStore = create((set, get) => ({
         }
     },
 
+    // --- MEMORY ACTIONS (WITH OFFLINE FALLBACK) ---
+    allocateMemory: async (name, sizeInput) => {
+        const size = parseInt(sizeInput);
+        if (isNaN(size) || size <= 0) return get().logEvent("Invalid allocation size", "error");
+
+        const { backendMode, sessionId, memory, logEvent } = get();
+
+        // Guard: Check local capacity
+        if (memory.heapUsed + size > memory.total) {
+            logEvent(`OUT OF MEMORY: Cannot allocate ${size}MB`, "error");
+            return;
+        }
+
+        const newBlock = {
+            id: `block-${Date.now()}-${Math.random()}`,
+            name: name || "Untitled Block",
+            size: size
+        };
+
+        if (backendMode && sessionId) {
+            try {
+                // Try to sync with server
+                const response = await gameApi.submitAction(sessionId, 'ALLOCATE', { name, size });
+                if (response?.data) {
+                    set((state) => ({
+                        memory: {
+                            ...state.memory,
+                            heapUsed: response.data.heapUsed || (state.memory.heapUsed + size),
+                            blocks: response.data.blocks || [...state.memory.blocks, newBlock]
+                        },
+                        xp: response.data.total_xp ?? state.xp
+                    }));
+                    if (size > 100) get().completeGoal(5);
+                    logEvent(`Allocated ${size}MB (Server Synced)`, "success");
+                    return;
+                }
+            } catch (err) {
+                logEvent("Backend offline: Allocating locally.", "info");
+            }
+        }
+
+        // Local fallback logic
+        set((state) => ({
+            memory: {
+                ...state.memory,
+                heapUsed: state.memory.heapUsed + size,
+                blocks: [...state.memory.blocks, newBlock]
+            }
+        }));
+        if (size > 100) get().completeGoal(5);
+        logEvent(`Allocated ${size}MB to ${newBlock.name} (Local)`, "success");
+    },
+
+    freeMemory: (blockId) => {
+        set((state) => {
+            const block = state.memory.blocks.find(b => b.id === blockId);
+            if (!block) return state;
+            return {
+                memory: {
+                    ...state.memory,
+                    heapUsed: Math.max(0, state.memory.heapUsed - block.size),
+                    blocks: state.memory.blocks.filter(b => b.id !== blockId)
+                }
+            };
+        });
+        get().logEvent("Memory block released.", "info");
+    },
+
+    // --- B-TREE ACTIONS ---
     updateBTree: async (newValue) => {
         const val = parseInt(newValue);
         if (isNaN(val)) return;
 
         const { backendMode, bTreeData, sessionId, activeTable, dbSchema } = get();
 
-        // Safe Deep Clone and Case-Insensitive Row Increment
         const getUpdatedSchema = (schema) => {
             const newSchema = JSON.parse(JSON.stringify(schema));
             const targetDb = activeTable?.dbName?.toUpperCase();
             const targetTab = activeTable?.tableName?.toUpperCase();
-
             const db = newSchema.children.find(d => d.name?.toUpperCase() === targetDb);
             if (db) {
                 const table = db.tables.find(t => t.name?.toUpperCase() === targetTab);
@@ -126,21 +202,18 @@ const useGameStore = create((set, get) => ({
                     });
                     get().logEvent(`Index update committed to ${activeTable.tableName}.`, "success");
                     if (response.data.did_split) get().completeGoal(1);
+                    return;
                 }
             } catch (err) {
-                const currentTree = JSON.parse(JSON.stringify(bTreeData));
-                const updated = insertAndSplit(currentTree, val);
-                set({ bTreeData: updated, dbSchema: getUpdatedSchema(dbSchema) });
-                if (updated.children) get().completeGoal(1);
-            }
-        } else {
-            const currentTree = JSON.parse(JSON.stringify(bTreeData));
-            const updated = insertAndSplit(currentTree, val);
-            set({ bTreeData: updated, dbSchema: getUpdatedSchema(dbSchema) });
-            if (updated.children && updated.children.length > 0) {
-                get().completeGoal(1);
+                get().logEvent("Backend offline: Falling back to local B-Tree logic.", "info");
             }
         }
+
+        // Local Logic
+        const currentTree = JSON.parse(JSON.stringify(bTreeData));
+        const updated = insertAndSplit(currentTree, val);
+        set({ bTreeData: updated, dbSchema: getUpdatedSchema(dbSchema) });
+        if (updated.children && updated.children.length > 0) get().completeGoal(1);
     },
 
     executeDatabaseCommand: async (fullCommand) => {
@@ -173,7 +246,6 @@ const useGameStore = create((set, get) => ({
                 const idx = newSchema.children.findIndex(d => d.name === target?.name);
                 if (idx !== -1) {
                     newSchema.children[idx].tables.push({ name, rows: 0, columns: ["id"] });
-                    // AUTO-SELECT the new table
                     set({ activeTable: { dbName: target.name, tableName: name } });
                     get().logEvent(`Table ${name} created and selected.`, "success");
                 }
