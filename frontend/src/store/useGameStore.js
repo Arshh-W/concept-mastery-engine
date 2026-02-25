@@ -188,6 +188,8 @@ const useGameStore = create((set, get) => ({
         return state;
     }),
 
+    setMemoryFromBackend: (memoryData) => set({ memory: memoryData }),
+
     clearHistory: () => set({ commandHistory: [] }),
 }));
 

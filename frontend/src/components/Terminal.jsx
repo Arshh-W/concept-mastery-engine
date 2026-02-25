@@ -9,19 +9,19 @@ const Terminal = () => {
     const { domain } = useParams();
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
-    
+
     // Destructure with default values to prevent "undefined" crashes
-    const { 
-        commandHistory = [], 
-        addCommand, 
-        logEvent, 
-        setMemoryFromBackend, 
-        updateBTree, 
-        searchKey, 
-        completeGoal, 
-        clearHistory 
+    const {
+        commandHistory = [],
+        addCommand,
+        logEvent,
+        setMemoryFromBackend,
+        updateBTree,
+        searchKey,
+        completeGoal,
+        clearHistory
     } = useGameStore();
-    
+
     const terminalEndRef = useRef(null);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const Terminal = () => {
                     await updateBTree(value);
                     logEvent(`Index update: Key ${value} inserted.`, "success");
                     addCommand(trimmedInput, `SUCCESS: Key ${value} added to B-Tree.`);
-                    
+
                     const latestTree = useGameStore.getState().bTreeData;
                     if (latestTree.children && latestTree.children.length > 0) {
                         completeGoal(1);
@@ -76,7 +76,7 @@ const Terminal = () => {
                 } else {
                     addCommand(trimmedInput, "ERROR: INSERT requires a numeric key.");
                 }
-            } 
+            }
             else if (cmd === 'SELECT') {
                 if (!isNaN(value)) {
                     logEvent(`Searching for Key: ${value}...`, "info");
@@ -85,7 +85,7 @@ const Terminal = () => {
                 } else {
                     addCommand(trimmedInput, "ERROR: SELECT requires a numeric key.");
                 }
-            } 
+            }
             else {
                 addCommand(trimmedInput, `Unknown DBMS command: ${cmd}`);
             }
@@ -126,23 +126,28 @@ const Terminal = () => {
 
             else if (cmd === 'FREE') {
                 const blockName = value;
-                const block = currentMemory.blocks.find(b => b.name === blockName);
+                // CHANGED: Use .toLowerCase() on both sides for case-insensitive matching
+                const block = currentMemory.blocks.find(
+                    (b) => b.name.toLowerCase() === blockName.toLowerCase()
+                );
 
                 if (block) {
                     const updatedMemory = {
                         ...currentMemory,
                         heapUsed: currentMemory.heapUsed - block.size,
-                        blocks: currentMemory.blocks.filter(b => b.name !== blockName)
+                        // CHANGED: Filter also needs to be case-insensitive
+                        blocks: currentMemory.blocks.filter(
+                            (b) => b.name.toLowerCase() !== blockName.toLowerCase()
+                        )
                     };
 
                     setMemoryFromBackend(updatedMemory);
-                    logEvent(`Freed memory block ${blockName}.`, "info");
-                    addCommand(trimmedInput, `Freed memory block ${blockName}.`);
+                    logEvent(`Freed memory block ${block.name}.`, "info");
+                    addCommand(trimmedInput, `Freed memory block ${block.name}.`);
                 } else {
-                    addCommand(trimmedInput, "ERROR: Block not found.");
+                    addCommand(trimmedInput, `ERROR: Block "${blockName}" not found.`);
                 }
             }
-
             else {
                 addCommand(trimmedInput, `Unknown OS command: ${cmd}`);
             }
