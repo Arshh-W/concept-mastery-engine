@@ -8,7 +8,7 @@ const apiClient = axios.create({
   timeout: 10000
 });
 
-// --- THE INTERCEPTOR ---
+//Interceptor to attach token to every request, if it exists
 // This runs BEFORE every request is sent
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token'); 
@@ -36,34 +36,35 @@ apiClient.interceptors.response.use(
 );
 
 export const gameApi = {
-  // --- AUTH ENTRIES ---
+  //Auth Engines
   login: (credentials) => 
     apiClient.post('/auth/login', credentials),
     
   register: (userData) => 
     apiClient.post('/auth/register', userData),
 
-  // --- CHALLENGES ---
-  getChallenges: (domain) => 
+  // Challenges
+  getChallenges: (domain) =>
     apiClient.get(`/game/challenges/${domain}`),
 
-  getMasteryChallenges: (domain) => 
-    apiClient.get(`/game/challenges/${domain}/mastery`),
+  // alias used by os.jsx / dbms.jsx — returns challenges WITH mastery annotated
+  getMasteryChallenges: (domain) =>
+    apiClient.get(`/game/challenges/${domain}`),
 
-  // --- SESSION MANAGEMENT ---
-  startSession: (domain, challengeId) => 
-    apiClient.post('/game/session/start', { domain, challenge_id: challengeId }),
+  //Session Management
+  startSession: (challengeSlug) =>
+    apiClient.post('/game/session/start', { challenge_slug: challengeSlug }),
 
-  submitAction: (token, action, value) => 
-    apiClient.post('/game/session/step', { token, action, value }),
+  submitAction: (sessionToken, action, params = {}) =>
+    apiClient.post('/game/session/step', { sessionToken, action, params }),
 
-  getSessionState: (token) => 
+  getSessionState: (token) =>
     apiClient.get(`/game/session/${token}/state`),
 
-  endSession: (token) => 
+  endSession: (token) =>
     apiClient.post(`/game/session/${token}/end`),
 
-  // --- USER DATA ---
+  //User Data
   getUserProgress: () => 
     apiClient.get('/game/user/progress'),
 
