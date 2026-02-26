@@ -1,14 +1,13 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
 
-#Auth 
+#Auth
 
 class UserCreate(BaseModel):
-    email: EmailStr
+    username: str = Field(min_length=3, max_length=100)
     password: str = Field(min_length=8, max_length=72)
-    name: Optional[str] = Field(None, max_length=100)
 
     @field_validator("password")
     @classmethod
@@ -17,11 +16,11 @@ class UserCreate(BaseModel):
             raise ValueError("Password cannot contain spaces")
         return v
 
-    model_config = {"json_schema_extra": {"examples": [{"email": "user@example.com", "password": "secure123", "name": "Alex"}]}}
+    model_config = {"json_schema_extra": {"examples": [{"username": "conqueror42", "password": "secure123"}]}}
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    username: str = Field(..., max_length=100)
     password: str = Field(..., max_length=72)
 
 
@@ -32,12 +31,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     user_id: int
-    email: str
+    username: str
 
 
 class UserResponse(BaseModel):
     id: int
-    email: str
     username: Optional[str] = None
     is_active: bool
     created_at: datetime

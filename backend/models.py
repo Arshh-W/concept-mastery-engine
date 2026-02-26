@@ -25,8 +25,8 @@ class User(Base):
     __tablename__ = "users"
 
     id            = Column(Integer, primary_key=True, index=True)
-    username      = Column(String(100), nullable=True)
-    email         = Column(String(255), unique=True, index=True, nullable=False)
+    username      = Column(String(100), unique=True, index=True, nullable=False)
+    email         = Column(String(255), unique=True, index=True, nullable=True)
     password_hash = Column(String(255), nullable=False)
     created_at    = Column(DateTime(timezone=True), server_default=func.now())
     total_exp     = Column(Integer, default=0)
@@ -37,13 +37,12 @@ class User(Base):
     achievements  = relationship("Achievement",  back_populates="user")
 
     def __repr__(self):
-        return f"User: {self.email} (ID: {self.id})"
+        return f"User: {self.username} (ID: {self.id})"
 
 
 #  Curriculum table, to store competencies and their relations, and map to challenges
 
 class Competency(Base):
-    """A single learnable concept node in the prerequisite DAG."""
     __tablename__ = "competencies"
 
     id            = Column(Integer, primary_key=True)
@@ -59,7 +58,6 @@ class Competency(Base):
 
 
 class Challenge(Base):
-    """A single playable level / puzzle."""
     __tablename__ = "challenges"
 
     id              = Column(Integer, primary_key=True)
@@ -84,7 +82,6 @@ class Challenge(Base):
 #Progress / Mastery tracking using BKT 
 
 class MasteryState(Base):
-    """BKT mastery probability per user per competency."""
     __tablename__ = "mastery_states"
 
     id             = Column(Integer, primary_key=True)
@@ -101,7 +98,6 @@ class MasteryState(Base):
 
 
 class Progress(Base):
-    """High-level completion tracking per user per challenge."""
     __tablename__ = "progress"
 
     id           = Column(Integer, primary_key=True)
@@ -119,7 +115,6 @@ class Progress(Base):
 #Game Sessions
 
 class GameSession(Base):
-    """One play-through of a challenge, by a user at one instance in time, can be active or completed"""
     __tablename__ = "game_sessions"
 
     id              = Column(Integer, primary_key=True)
