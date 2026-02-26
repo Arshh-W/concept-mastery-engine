@@ -1,7 +1,6 @@
 //To secure "Gaming Engine" and ensure progress like XP and BKT data is saved to the correct account...
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-// import { getMe } from '../api'; 
 
 const ProtectedRoute = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
