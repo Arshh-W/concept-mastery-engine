@@ -2,51 +2,30 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/navbar.jsx";
 import { gameApi } from "../services/api";
-import useGameStore from "../store/useGameStore"; 
-
 import "./Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  
-  // Access the global setSession or a new setUser action if you add one
-  const { setSession } = useGameStore();
 
   const handleLogin = async () => {
+    setError("");
     if (!username || !password) {
-      alert("Please enter both username and password.");
+      setError("Please enter both username and password.");
       return;
     }
 
     try {
-      // 1. Call the new centralized API
-      const res = await gameApi.login({ 
-        username: username, 
-        password: password 
-      });
-
-      // 2. Handle the Token (Crucial for the Interceptor in api.js)
-      // Assuming your backend returns { access_token: "...", user: {...} }
-      const { access_token, user_Id, username: serverUsername } = res.data;
-      
+      const res = await gameApi.login({ username, password });
+      const { access_token } = res.data;
       localStorage.setItem("auth_token", access_token);
-
-      // 3. Update Global State
-      // If your store has a setUser, use that. Otherwise, we can store the ID.
-      if (setSession) {
-        setSession(user_Id); 
-      }
-
-      alert("Authentication Successful. Welcome back, Conqueror.");
       navigate("/roadmap");
-
     } catch (err) {
       console.error("Login Error:", err);
-      // Check if it's a 401/403 or server down
-      const errorMsg = err.response?.data?.detail || "Invalid credentials or Server Offline";
-      alert(errorMsg);
+      const msg = err.response?.data?.error || "Invalid credentials or server offline.";
+      setError(msg);
     }
   };
 
@@ -54,9 +33,11 @@ const Login = () => {
     <div className="login-page-wrapper">
       <Navbar />
       <div className="auth-container">
-        <div className="auth-card glass fade-in"> 
+        <div className="auth-card glass fade-in">
           <h1>Code Conquer</h1>
           <p className="subtitle">Learn and Improve</p>
+
+          {error && <p style={{ color: "#ff4d4d", marginBottom: "10px", fontSize: "14px" }}>{error}</p>}
 
           <div className="input-group">
             <input
@@ -74,7 +55,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             />
           </div>
 

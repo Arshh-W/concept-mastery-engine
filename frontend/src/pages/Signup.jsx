@@ -1,36 +1,33 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/navbar.jsx";
-import { gameApi } from "../services/api"; // Connect to centralized API
+import { gameApi } from "../services/api";
 import "./Login.css";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    // Basic validation to prevent unnecessary API calls
+    setError("");
     if (!username || !password) {
-      alert("Please fill in all fields.");
+      setError("Please fill in all fields.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       return;
     }
 
     try {
-      // 1. Call the backend via gameApi
-      await gameApi.register({ 
-        username: username, 
-        password: password 
-      });
-
-      alert("Account created! Please login to begin your conquest.");
+      await gameApi.register({ username, password });
       navigate("/login");
-      
     } catch (err) {
       console.error("Signup Error:", err);
-      // Try to get specific error message from Python backend (e.g., "Username taken")
-      const errorMsg = err.response?.data?.detail || "Signup failed. Try a different username.";
-      alert(errorMsg);
+      const msg = err.response?.data?.error || "Signup failed. Try a different username.";
+      setError(msg);
     }
   };
 
@@ -41,6 +38,8 @@ const Signup = () => {
         <div className="auth-card glass fade-in">
           <h1>Create Account</h1>
           <p className="subtitle">Join and conquer it!</p>
+
+          {error && <p style={{ color: "#ff4d4d", marginBottom: "10px", fontSize: "14px" }}>{error}</p>}
 
           <div className="input-group">
             <input
@@ -54,11 +53,11 @@ const Signup = () => {
           <div className="input-group">
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Password (min 8 chars)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
-              onKeyDown={(e) => e.key === 'Enter' && handleSignup()}
+              onKeyDown={(e) => e.key === "Enter" && handleSignup()}
             />
           </div>
 

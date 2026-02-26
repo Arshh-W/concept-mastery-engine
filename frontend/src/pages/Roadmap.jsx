@@ -3,7 +3,7 @@ import Navbar from '../components/navbar';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { gameApi } from '../services/api';
-import './roadmap.css';
+import './Roadmap.css';
 
 export default function Roadmap() {
   const [progress, setProgress] = useState({ os: 0, dbms: 0 });

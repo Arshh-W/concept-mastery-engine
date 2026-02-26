@@ -3,7 +3,7 @@ import Navbar from "../components/navbar";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gameApi } from "../services/api"; // Import the API
-import "./Os.css";
+import "./os.css";
 
 export default function Os() {
   const [openIndex, setOpenIndex] = useState(null);
