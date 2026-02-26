@@ -1,5 +1,5 @@
 import React from "react";
-import useGameStore from "../store/useGameStore";
+import useGameStore1 from "../store/use1";
 
 const generateColor = (index) => {
   const colors = [
@@ -9,10 +9,8 @@ const generateColor = (index) => {
 };
 
 const MemoryMap = () => {
-  const { memory } = useGameStore();
+  const { memory } = useGameStore1();
 
-  // 1. GUARD CLAUSE: If memory is undefined (due to backend error), 
-  // show a fallback UI instead of crashing.
   if (!memory || !memory.blocks) {
     return (
       <div style={{ padding: "20px", color: "#777" }}>
@@ -22,8 +20,8 @@ const MemoryMap = () => {
     );
   }
 
-  // 2. SAFE CALCULATIONS: Using default values to prevent NaN
-  const total = memory.total || 1; // Prevent division by zero
+
+  const total = memory.total || 1; 
   const heapUsed = memory.heapUsed || 0;
   const usagePercent = (heapUsed / total) * 100;
   const freeMemory = total - heapUsed;
@@ -40,7 +38,7 @@ const MemoryMap = () => {
         Heap Used: <strong>{heapUsed} MB</strong>
       </div>
 
-      {/* Main Memory Bar */}
+ 
       <div style={{ marginBottom: "10px" }}>
         <div
           style={{
