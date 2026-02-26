@@ -10,7 +10,7 @@ const ProtectedRoute = () => {
         const verifyUser = async () => {
             try {
                 // Checking if a token exists first to avoid unnecessary API calls
-                const token = localStorage.getItem('access_token');
+                const token = localStorage.getItem('auth_token');
                 if (!token) {
                     setIsAuthenticated(false);
                     return;
@@ -21,7 +21,7 @@ const ProtectedRoute = () => {
                 setIsAuthenticated(true);
             } catch (err) {
                 console.error("Auth verification failed:", err);
-                localStorage.removeItem('access_token'); // Clear invalid token
+                localStorage.removeItem('auth_token'); // Clear invalid token
                 setIsAuthenticated(false);
             }
         };
