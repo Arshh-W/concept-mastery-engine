@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { gameApi } from "../services/api";
 
-
 const insertAndSplit = (node, val) => {
   if (!node) return { id: Math.random(), values: [val], children: null };
 
@@ -17,6 +16,7 @@ const insertAndSplit = (node, val) => {
         children: null,
       };
     }
+
     node.children[childIdx] = insertAndSplit(
       node.children[childIdx],
       val
@@ -64,11 +64,9 @@ const insertAndSplit = (node, val) => {
   return node;
 };
 
-
 const useGameStore = create(
   persist(
     (set, get) => ({
-      
       backendMode: true,
       sessionId: null,
       xp: 0,
@@ -101,8 +99,6 @@ const useGameStore = create(
       },
 
       bTreeData: { id: "root", values: [50], children: null },
-
-  
 
       logEvent: (message, type = "info") =>
         set((state) => ({
@@ -138,8 +134,6 @@ const useGameStore = create(
         }
       },
 
-  
-
       updateBTree: async (newValue) => {
         const val = parseInt(newValue);
         if (isNaN(val)) return { success: false };
@@ -173,9 +167,7 @@ const useGameStore = create(
           }
         }
 
-        const currentTree = JSON.parse(
-          JSON.stringify(bTreeData)
-        );
+        const currentTree = JSON.parse(JSON.stringify(bTreeData));
         const updated = insertAndSplit(currentTree, val);
 
         set({ bTreeData: updated });
@@ -199,9 +191,7 @@ const useGameStore = create(
           if (node.values?.includes(val)) return;
 
           if (node.children) {
-            let idx = node.values.findIndex(
-              (v) => val < v
-            );
+            let idx = node.values.findIndex((v) => val < v);
             if (idx === -1) idx = node.values.length;
             traverse(node.children[idx]);
           }
@@ -218,10 +208,7 @@ const useGameStore = create(
 
         get().completeGoal(2);
 
-        setTimeout(
-          () => set({ highlightedNodes: [] }),
-          1500
-        );
+        setTimeout(() => set({ highlightedNodes: [] }), 1500);
 
         return { success: true };
       },
@@ -230,9 +217,7 @@ const useGameStore = create(
         const parts = fullCommand.trim().split(/\s+/);
         const action = parts[0]?.toUpperCase();
         const { dbSchema } = get();
-        let newSchema = JSON.parse(
-          JSON.stringify(dbSchema)
-        );
+        let newSchema = JSON.parse(JSON.stringify(dbSchema));
 
         if (action === "CREATE") {
           const type = parts[1]?.toUpperCase();
@@ -249,12 +234,40 @@ const useGameStore = create(
               tables: [],
             });
 
-            if (name.toUpperCase() === "PRODUCTION")
-              get().completeGoal(4);
+            set({ dbSchema: newSchema });
+            return { success: true };
           }
 
-          set({ dbSchema: newSchema });
-          return { success: true };
+          if (type === "TABLE") {
+            const targetDbName =
+              get().selectedNode?.name ||
+              get().activeTable?.dbName;
+
+            const dbIndex = newSchema.children.findIndex(
+              (db) =>
+                db.name?.toUpperCase() ===
+                targetDbName?.toUpperCase()
+            );
+
+            if (dbIndex === -1)
+              return { success: false, error: "Database not found" };
+
+            newSchema.children[dbIndex].tables.push({
+              name,
+              rows: 0,
+              columns: ["id"],
+            });
+
+            set({
+              dbSchema: newSchema,
+              activeTable: {
+                dbName: newSchema.children[dbIndex].name,
+                tableName: name,
+              },
+            });
+
+            return { success: true };
+          }
         }
 
         if (action === "USE") {
@@ -275,8 +288,7 @@ const useGameStore = create(
             selectedNode: found,
             activeTable: {
               dbName: found.name,
-              tableName:
-                found.tables[0]?.name || "",
+              tableName: found.tables[0]?.name || "",
             },
           });
 
