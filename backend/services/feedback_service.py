@@ -1,10 +1,7 @@
-""" 
-Atharva yahaan par feedback service ka code daaldena, 
-make a basic gemini api call to get the feedback, data me usse current state ka info bhejda it doesn't have to be 
-too detailed, just a simple call, haan ek particular schema bna lena still using pydantic to keep the responses uniform.
-
-
-Baaki sabh ready h, I'll get started on the wrapper now
+"""
+Feedback Service — Gemini-powered step feedback and deterministic goal evaluation.
+Calls Gemini 2.5 Flash with the current sim state and action result to produce
+concise, schema-validated feedback for the player.
 """
 
 import os

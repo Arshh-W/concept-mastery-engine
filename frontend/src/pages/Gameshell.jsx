@@ -4,16 +4,20 @@ import Navbar from "../components/navbar";
 import Terminal from "../components/Terminal";
 import MemoryMap from "../components/Memorymap";
 import BTreeVisualizer from "../components/BTreeVisualizer";
-import TableInspector from "../components/TableInspector"; // New Import
+import TableInspector from "../components/TableInspector";
 import EventLog from "../components/Eventlog";
 import GoalPanel from "../components/Goalpanel";
 import "./Gameshell.css";
 import XPHud from "../components/XPHud";
 import HintPanel from "../components/HintPanel";
+import useGameStore from "../store/useGameStore";   // DBMS — holds sessionId
 import useProgressStore from "../store/useProgressStore";
 
 export default function GameShell() {
   const { domain, module } = useParams();
+
+  // Pull the live session token so HintPanel can query the adaptive engine
+  const sessionId = useGameStore((s) => s.sessionId);
 
   return (
     <>
@@ -22,7 +26,6 @@ export default function GameShell() {
 
       <div className="game-container">
         <div className="left-panel">
-          {/* If DBMS, we use a split layout inside the panel */}
           {domain === "dbms" ? (
             <div className="dbms-workspace">
               <div className="tree-canvas">
@@ -35,13 +38,12 @@ export default function GameShell() {
           ) : (
             <MemoryMap />
           )}
-          
-          
         </div>
 
         <div className="right-panel">
           <GoalPanel />
-          <HintPanel sessionToken={null} challengeSlug={module} />
+          {/* Pass live session token so hints are tied to actual session event log */}
+          <HintPanel sessionToken={sessionId} challengeSlug={module} />
           <EventLog />
         </div>
 

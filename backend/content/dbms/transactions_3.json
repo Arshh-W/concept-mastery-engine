@@ -1,0 +1,53 @@
+{
+  "id": "transactions_3",
+  "title": "Transactions & Concurrency",
+  "topics": [
+    {
+      "name": "Transactions",
+      "explanation": "Logical unit of database operations.",
+      "key_points": [
+        "Commit",
+        "Rollback"
+      ],
+      "example": "Bank transfer."
+    },
+    {
+      "name": "ACID Properties",
+      "explanation": "Ensures reliable transactions.",
+      "key_points": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "example": "Money transfer safety."
+    },
+    {
+      "name": "Concurrency Problems",
+      "explanation": "Occurs when multiple transactions execute simultaneously.",
+      "key_points": [
+        "Dirty read",
+        "Lost update"
+      ],
+      "example": "Two users updating same record."
+    },
+    {
+      "name": "Locks and 2PL",
+      "explanation": "Locking protocols control concurrency.",
+      "key_points": [
+        "Shared lock",
+        "Exclusive lock",
+        "Two phase locking"
+      ],
+      "example": "Transaction locking rows."
+    },
+    {
+      "name": "Deadlocks",
+      "explanation": "Transactions waiting indefinitely.",
+      "key_points": [
+        "Circular waiting"
+      ],
+      "example": "Two transactions holding locks."
+    }
+  ]
+}

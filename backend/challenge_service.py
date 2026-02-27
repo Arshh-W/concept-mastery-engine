@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from models import Challenge, Competency, SubjectEnum
 
 
-CONTENT_DIR = Path(__file__).parent.parent / "content"
+CONTENT_DIR = Path(__file__).parent / "content"
 
 
 def _load_json_files(domain: str) -> list[dict]:

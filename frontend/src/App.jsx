@@ -12,13 +12,13 @@ import Feedback from "./pages/Feedback.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import GameShell from "./pages/Gameshell";
-import Memory from "./pages/memory";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <AnimatePresence mode="wait">
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<CodeConquer />} />
         <Route path="/roadmap" element={<Roadmap />} />
         <Route path="/skill-tree" element={<SkillTree />} />
@@ -30,11 +30,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/os/memory" element={<GameShell />} />
-        <Route path="/os/memory1" element={<Memory />} />
-        <Route path="/game/:domain/:module" element={<GameShell />} />     
+
+        {/* Protected routes — require auth */}
         <Route element={<ProtectedRoute />}>
-        {/* <Route path="/game/:domain/:module" element={<GameShell />} />       */}
+          <Route path="/game/:domain/:module" element={<GameShell />} />
+          <Route path="/os/memory" element={<GameShell />} />
         </Route>
       </Routes>
     </AnimatePresence>
