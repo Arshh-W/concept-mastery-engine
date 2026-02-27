@@ -1,0 +1,53 @@
+{
+  "id": "sync_4",
+  "title": "Synchronization & Concurrency",
+  "topics": [
+    {
+      "name": "Critical Section",
+      "explanation": "Code segment where shared resources are accessed.",
+      "key_points": [
+        "Only one process allowed",
+        "Avoids race condition"
+      ],
+      "example": "Updating shared variable."
+    },
+    {
+      "name": "Mutex",
+      "explanation": "Mutual exclusion lock to protect critical sections.",
+      "key_points": [
+        "Binary lock",
+        "Prevents simultaneous access"
+      ],
+      "example": "lock() and unlock()."
+    },
+    {
+      "name": "Semaphores",
+      "explanation": "Synchronization tool using integer counters.",
+      "key_points": [
+        "Binary semaphore",
+        "Counting semaphore"
+      ],
+      "example": "wait() and signal()."
+    },
+    {
+      "name": "Deadlock",
+      "explanation": "Situation where processes wait forever.",
+      "key_points": [
+        "Mutual exclusion",
+        "Hold and wait",
+        "No preemption",
+        "Circular wait"
+      ],
+      "example": "Two processes waiting for each other."
+    },
+    {
+      "name": "Banker's Algorithm",
+      "explanation": "Deadlock avoidance algorithm using safe state checking.",
+      "key_points": [
+        "Resource allocation strategy",
+        "Safe sequence required"
+      ],
+      "example": "Used in theoretical OS scheduling."
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "process_mgmt_2",
+  "title": "Process Management",
+  "topics": [
+    {
+      "name": "Process vs Program",
+      "explanation": "A program is a passive set of instructions, while a process is an active execution of a program.",
+      "key_points": [
+        "Program is static",
+        "Process is dynamic",
+        "Process contains memory and execution state"
+      ],
+      "example": "Opening Chrome creates multiple processes."
+    },
+    {
+      "name": "Process States",
+      "explanation": "Processes move through different execution stages.",
+      "key_points": [
+        "New",
+        "Ready",
+        "Running",
+        "Waiting",
+        "Terminated"
+      ],
+      "example": "A process waiting for I/O moves to waiting state."
+    },
+    {
+      "name": "Context Switching",
+      "explanation": "Switching CPU execution from one process to another.",
+      "key_points": [
+        "Process state is saved",
+        "PCB is used",
+        "Adds overhead"
+      ],
+      "example": "Occurs during multitasking."
+    },
+    {
+      "name": "CPU Scheduling - FCFS",
+      "explanation": "First Come First Serve scheduling executes processes in arrival order.",
+      "key_points": [
+        "Simple algorithm",
+        "Non-preemptive",
+        "May cause convoy effect"
+      ],
+      "example": "Processes executed like a queue."
+    },
+    {
+      "name": "Round Robin",
+      "explanation": "Each process gets a fixed time slice called quantum.",
+      "key_points": [
+        "Preemptive scheduling",
+        "Fair CPU allocation",
+        "Used in time-sharing systems"
+      ],
+      "example": "Each process gets 4ms execution time."
+    }
+  ]
+}

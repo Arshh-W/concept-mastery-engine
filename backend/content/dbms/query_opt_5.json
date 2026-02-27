@@ -1,0 +1,48 @@
+{
+  "id": "query_opt_5",
+  "title": "Query Processing & Optimization",
+  "topics": [
+    {
+      "name": "SELECT Statement",
+      "explanation": "Used to retrieve data.",
+      "key_points": [
+        "Core SQL command"
+      ],
+      "example": "SELECT * FROM student;"
+    },
+    {
+      "name": "WHERE Filtering",
+      "explanation": "Filters records based on condition.",
+      "key_points": [
+        "Conditional selection"
+      ],
+      "example": "WHERE marks > 90"
+    },
+    {
+      "name": "Joins (Inner/Outer)",
+      "explanation": "Combine rows from multiple tables.",
+      "key_points": [
+        "Inner join",
+        "Outer join"
+      ],
+      "example": "Student JOIN Course."
+    },
+    {
+      "name": "Index Usage in Queries",
+      "explanation": "Indexes speed up search operations.",
+      "key_points": [
+        "Reduces scan time"
+      ],
+      "example": "Primary key indexing."
+    },
+    {
+      "name": "Query Optimization Basics",
+      "explanation": "Process of improving query performance.",
+      "key_points": [
+        "Execution plan",
+        "Cost estimation"
+      ],
+      "example": "Using indexes."
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "fundamentals_1",
+  "title": "DBMS Fundamentals",
+  "topics": [
+    {
+      "name": "What is DBMS?",
+      "explanation": "DBMS is software used to store, manage, and retrieve data efficiently.",
+      "key_points": [
+        "Centralized data control",
+        "Reduces redundancy"
+      ],
+      "example": "MySQL and Oracle."
+    },
+    {
+      "name": "Database Architecture",
+      "explanation": "Defines structure of database system layers.",
+      "key_points": [
+        "Three-tier architecture",
+        "Logical and physical levels"
+      ],
+      "example": "Client-server DB."
+    },
+    {
+      "name": "Advantages of DBMS",
+      "explanation": "Provides efficient data handling.",
+      "key_points": [
+        "Security",
+        "Backup",
+        "Concurrency"
+      ],
+      "example": "Multi-user banking systems."
+    },
+    {
+      "name": "Types of Databases",
+      "explanation": "Different models for storing data.",
+      "key_points": [
+        "Relational",
+        "NoSQL",
+        "Hierarchical"
+      ],
+      "example": "MongoDB is NoSQL."
+    }
+  ]
+}

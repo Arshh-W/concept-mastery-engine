@@ -1,0 +1,51 @@
+{
+  "id": "memory_mgmt_3",
+  "title": "Memory Management",
+  "topics": [
+    {
+      "name": "Contiguous Allocation",
+      "explanation": "Each process occupies a single continuous memory block.",
+      "key_points": [
+        "Simple method",
+        "External fragmentation occurs"
+      ],
+      "example": "Process allocated 100KB continuous space."
+    },
+    {
+      "name": "Paging",
+      "explanation": "Memory is divided into fixed-size pages and frames.",
+      "key_points": [
+        "Eliminates external fragmentation",
+        "Uses page table"
+      ],
+      "example": "Page size = 4KB."
+    },
+    {
+      "name": "Segmentation",
+      "explanation": "Memory divided into logical segments like code, stack, data.",
+      "key_points": [
+        "Logical division",
+        "Supports protection"
+      ],
+      "example": "Separate segment for functions."
+    },
+    {
+      "name": "Virtual Memory",
+      "explanation": "Allows execution of programs larger than physical memory.",
+      "key_points": [
+        "Uses disk as extension",
+        "Improves multitasking"
+      ],
+      "example": "Demand paging."
+    },
+    {
+      "name": "Page Replacement - LRU",
+      "explanation": "Least Recently Used page is replaced.",
+      "key_points": [
+        "Based on usage history",
+        "Better than FIFO"
+      ],
+      "example": "Oldest unused page removed."
+    }
+  ]
+}

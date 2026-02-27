@@ -1,0 +1,50 @@
+{
+  "id": "indexing_4",
+  "title": "Indexing & Trees",
+  "topics": [
+    {
+      "name": "Binary Search Tree",
+      "explanation": "Tree structure where left < root < right.",
+      "key_points": [
+        "Fast searching",
+        "O(log n) average"
+      ],
+      "example": "Sorted data storage."
+    },
+    {
+      "name": "B-Tree",
+      "explanation": "Balanced tree optimized for disk storage.",
+      "key_points": [
+        "Multiple children",
+        "Balanced height"
+      ],
+      "example": "Database indexing."
+    },
+    {
+      "name": "B+ Tree",
+      "explanation": "Improved B-tree for range queries.",
+      "key_points": [
+        "Leaf nodes linked"
+      ],
+      "example": "Used in DBMS indexing."
+    },
+    {
+      "name": "Node Splitting",
+      "explanation": "Occurs when node exceeds capacity.",
+      "key_points": [
+        "Maintains balance"
+      ],
+      "example": "Insert overflow case."
+    },
+    {
+      "name": "Traversal Paths",
+      "explanation": "Ways to visit tree nodes.",
+      "key_points": [
+        "Inorder",
+        "Preorder",
+        "Postorder"
+      ],
+      "example": "Tree traversal."
+    }
+  ]
+}

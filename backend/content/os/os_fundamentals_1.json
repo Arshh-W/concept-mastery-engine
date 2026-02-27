@@ -1,0 +1,46 @@
+{
+  "id": "os_fundamentals_1",
+  "title": "OS Fundamentals",
+  "topics": [
+    {
+      "name": "What is an Operating System?",
+      "explanation": "An Operating System (OS) is system software that manages computer hardware and software resources and provides services for programs.",
+      "key_points": [
+        "Acts as interface between user and hardware",
+        "Manages memory, CPU, and files",
+        "Controls input/output devices"
+      ],
+      "example": "Windows, Linux, and macOS are examples of operating systems."
+    },
+    {
+      "name": "Kernel vs User Mode",
+      "explanation": "Computers operate in two modes to ensure system protection.",
+      "key_points": [
+        "Kernel mode has full hardware access",
+        "User mode has restricted access",
+        "Prevents malicious programs from crashing the system"
+      ],
+      "example": "System drivers run in kernel mode while applications run in user mode."
+    },
+    {
+      "name": "System Calls",
+      "explanation": "System calls allow programs to request services from the operating system.",
+      "key_points": [
+        "Interface between user programs and OS",
+        "Used for file operations and process control",
+        "Switch execution to kernel mode"
+      ],
+      "example": "open(), read(), write() in Linux."
+    },
+    {
+      "name": "OS Architecture",
+      "explanation": "OS architecture defines how the operating system components are organized.",
+      "key_points": [
+        "Monolithic architecture",
+        "Microkernel architecture",
+        "Layered architecture"
+      ],
+      "example": "Linux uses a monolithic kernel design."
+    }
+  ]
+}

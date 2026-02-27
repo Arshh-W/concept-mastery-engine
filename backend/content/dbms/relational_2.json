@@ -1,0 +1,51 @@
+{
+  "id": "relational_2",
+  "title": "Relational Model & Normalization",
+  "topics": [
+    {
+      "name": "Relational Model",
+      "explanation": "Data stored in tables with rows and columns.",
+      "key_points": [
+        "Primary key",
+        "Foreign key"
+      ],
+      "example": "Student table."
+    },
+    {
+      "name": "ER Model",
+      "explanation": "Graphical representation of database structure.",
+      "key_points": [
+        "Entities",
+        "Relationships",
+        "Attributes"
+      ],
+      "example": "Student–Course relation."
+    },
+    {
+      "name": "Functional Dependencies",
+      "explanation": "Defines relationship between attributes.",
+      "key_points": [
+        "A → B relation"
+      ],
+      "example": "RollNo determines Name."
+    },
+    {
+      "name": "1NF / 2NF / 3NF",
+      "explanation": "Normalization levels to remove redundancy.",
+      "key_points": [
+        "Atomic values",
+        "Remove partial dependency",
+        "Remove transitive dependency"
+      ],
+      "example": "Split tables."
+    },
+    {
+      "name": "BCNF",
+      "explanation": "Stronger form of 3NF.",
+      "key_points": [
+        "Every determinant is candidate key"
+      ],
+      "example": "Advanced normalization."
+    }
+  ]
+}

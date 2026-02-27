@@ -3,6 +3,7 @@ from flask_cors import CORS
 from config import CORS_ORIGINS
 from routes.auth import auth_bp
 from routes.game import game_bp
+from routes.adaptive import adaptive_bp
 from database import init_db, SessionLocal
 
 
@@ -13,6 +14,7 @@ def create_app():
     #blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(game_bp, url_prefix="/api/game")
+    app.register_blueprint(adaptive_bp, url_prefix="/api")
 
     #DB init and seeding
     init_db()

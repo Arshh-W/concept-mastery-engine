@@ -1,0 +1,40 @@
+{
+  "id": "file_systems_5",
+  "title": "File Systems",
+  "topics": [
+    {
+      "name": "Inodes",
+      "explanation": "Data structure storing file metadata.",
+      "key_points": [
+        "Stores size and permissions",
+        "Does not store filename"
+      ],
+      "example": "Used in Unix file systems."
+    },
+    {
+      "name": "Disk Scheduling - FCFS",
+      "explanation": "Disk requests handled in arrival order.",
+      "key_points": [
+        "Simple",
+        "High seek time"
+      ],
+      "example": "Queue based execution."
+    },
+    {
+      "name": "SCAN",
+      "explanation": "Disk arm moves in one direction servicing requests.",
+      "key_points": [
+        "Also called elevator algorithm"
+      ],
+      "example": "Head moves left to right."
+    },
+    {
+      "name": "C-SCAN",
+      "explanation": "Circular SCAN for uniform waiting time.",
+      "key_points": [
+        "Head resets after reaching end"
+      ],
+      "example": "Circular movement."
+    }
+  ]
+}
