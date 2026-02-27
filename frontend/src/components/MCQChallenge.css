@@ -1,0 +1,318 @@
+/* MCQChallenge.css */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+.mcq-shell {
+  background: rgba(10, 14, 22, 0.95);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+  font-family: 'Syne', sans-serif;
+  color: #e2e8f0;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Header */
+.mcq-header {
+  margin-bottom: 20px;
+}
+
+.mcq-progress-track {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.mcq-progress-seg {
+  height: 3px;
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+
+.mcq-progress-seg.done {
+  background: var(--mc, #06b6d4);
+}
+
+.mcq-progress-seg.current {
+  background: color-mix(in srgb, var(--mc) 60%, rgba(255,255,255,0.2));
+}
+
+.mcq-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mcq-type {
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.1em;
+  color: var(--mc);
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mc) 12%, rgba(0,0,0,0));
+  border: 1px solid color-mix(in srgb, var(--mc) 30%, transparent);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.mcq-timer {
+  font-size: 13px;
+  font-family: 'Space Mono', monospace;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+}
+
+.mcq-timer.urgent {
+  color: #ef4444;
+  animation: pulse-red 0.8s ease infinite alternate;
+}
+
+@keyframes pulse-red {
+  from { opacity: 0.7; }
+  to { opacity: 1; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
+}
+
+/* Question */
+.mcq-question-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mcq-qnum {
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.08em;
+}
+
+.mcq-question {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.55;
+  color: white;
+  white-space: pre-line;
+}
+
+/* Options */
+.mcq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mcq-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: all 0.18s;
+  font-family: 'Syne', sans-serif;
+  position: relative;
+}
+
+.mcq-option:hover:not(.correct):not(.wrong) {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.mcq-option.selected {
+  background: color-mix(in srgb, var(--mc) 12%, rgba(0,0,0,0));
+  border-color: color-mix(in srgb, var(--mc) 50%, transparent);
+  color: white;
+}
+
+.mcq-option.correct {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #22c55e;
+  color: #bbf7d0;
+}
+
+.mcq-option.wrong {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.option-letter {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  flex-shrink: 0;
+}
+
+.option-check, .option-x {
+  position: absolute;
+  right: 14px;
+  font-size: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Explanation */
+.mcq-explanation {
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.mcq-explanation.correct-exp {
+  background: rgba(34, 197, 94, 0.07);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.mcq-explanation.wrong-exp {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.exp-header {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.exp-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+}
+
+.exp-concept {
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  color: var(--mc);
+  padding-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Actions */
+.mcq-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mcq-submit-btn, .mcq-next-btn {
+  background: color-mix(in srgb, var(--mc) 20%, rgba(0,0,0,0));
+  border: 1px solid color-mix(in srgb, var(--mc) 60%, transparent);
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mc);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.mcq-submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.mcq-submit-btn:not(:disabled):hover,
+.mcq-next-btn:hover {
+  background: color-mix(in srgb, var(--mc) 30%, rgba(0,0,0,0));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--mc) 20%, transparent);
+}
+
+/* Score Screen */
+.mcq-score-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px;
+  text-align: center;
+  background: rgba(10, 14, 22, 0.95);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  font-family: 'Syne', sans-serif;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.score-pct {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 40px currentColor;
+  font-family: 'Space Mono', monospace;
+}
+
+.score-grade {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.score-fraction {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Space Mono', monospace;
+}
+
+.score-xp {
+  font-size: 20px;
+  font-weight: 800;
+  color: #f59e0b;
+  text-shadow: 0 0 20px rgba(245,158,11,0.4);
+}
+
+.score-tip {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.score-actions {
+  margin-top: 8px;
+}
+
+.score-retry-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Syne', sans-serif;
+}
+
+.score-retry-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transform: translateY(-1px);
+}

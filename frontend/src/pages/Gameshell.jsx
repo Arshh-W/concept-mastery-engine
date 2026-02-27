@@ -8,6 +8,9 @@ import TableInspector from "../components/TableInspector"; // New Import
 import EventLog from "../components/Eventlog";
 import GoalPanel from "../components/Goalpanel";
 import "./Gameshell.css";
+import XPHud from "../components/XPHud";
+import HintPanel from "../components/HintPanel";
+import useProgressStore from "../store/useProgressStore";
 
 export default function GameShell() {
   const { domain, module } = useParams();
@@ -15,6 +18,7 @@ export default function GameShell() {
   return (
     <>
       <Navbar />
+      <XPHud />
 
       <div className="game-container">
         <div className="left-panel">
@@ -37,6 +41,7 @@ export default function GameShell() {
 
         <div className="right-panel">
           <GoalPanel />
+          <HintPanel sessionToken={null} challengeSlug={module} />
           <EventLog />
         </div>
 

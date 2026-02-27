@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 
 import CodeConquer from "./pages/landing.jsx";
 import Roadmap from "./pages/Roadmap.jsx";
+import SkillTree from "./pages/SkillTree.jsx";
 import Os from "./pages/os.jsx";
 import Dbms from "./pages/dbms.jsx";
 import About from "./pages/about.jsx";
@@ -20,6 +21,8 @@ function App() {
       <Routes>
         <Route path="/" element={<CodeConquer />} />
         <Route path="/roadmap" element={<Roadmap />} />
+        <Route path="/skill-tree" element={<SkillTree />} />
+        <Route path="/skill-tree/:domain" element={<SkillTree />} />
         <Route path="/os" element={<Os />} />
         <Route path="/dbms" element={<Dbms />} />
         <Route path="/about" element={<About />} />
