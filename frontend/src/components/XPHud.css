@@ -3,7 +3,7 @@
 .xp-hud {
   position: fixed;
   top: 72px;
-  right: 16px;
+  left: 16px;
   z-index: 200;
   background: rgba(10, 14, 22, 0.92);
   border: 1px solid rgba(255,255,255,0.08);
@@ -112,7 +112,7 @@
 .reward-popup {
   position: fixed;
   bottom: 80px;
-  right: 20px;
+  left: 20px;
   z-index: 9999;
   background: rgba(10, 14, 22, 0.97);
   border: 1px solid rgba(255,255,255,0.12);

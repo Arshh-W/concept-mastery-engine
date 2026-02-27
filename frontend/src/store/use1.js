@@ -142,9 +142,10 @@ const useGameStore1 = create(
       freeMemory: async (identifier) => {
         const { memory } = get();
 
+        const id_lower = identifier?.toLowerCase();
         const block = memory.blocks.find(
           (b) =>
-            b.name === identifier || b.id === identifier
+            b.name?.toLowerCase() === id_lower || b.id?.toLowerCase() === id_lower
         );
 
         if (!block) {

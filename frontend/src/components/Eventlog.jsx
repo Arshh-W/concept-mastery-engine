@@ -1,14 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useParams } from 'react-router-dom';
 import useGameStore from '../store/useGameStore';
+import useGameStore1 from '../store/use1';
 import './Eventlog.css';
 
 const EventLog = () => {
-  // Defensive destructuring: default to an empty array to prevent .map() errors
-  const { currentEventLog = [] } = useGameStore();
+  const { domain } = useParams();
+
+  // Read from the correct store depending on active domain
+  const dbmsLog = useGameStore((s) => s.currentEventLog ?? []);
+  const osLog   = useGameStore1((s) => s.currentEventLog ?? []);
+  const currentEventLog = domain === 'os' ? osLog : dbmsLog;
+
   const logEndRef = useRef(null);
 
-  // Auto-scroll to the latest system event whenever the log updates
   useEffect(() => {
     if (logEndRef.current) {
       logEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -38,10 +44,10 @@ const EventLog = () => {
                   className={`log-entry ${event.type || 'info'}`}
                 >
                   <span className="timestamp">
-                    [{new Date(event.id).toLocaleTimeString([], { 
-                      hour12: false, 
-                      minute: '2-digit', 
-                      second: '2-digit' 
+                    [{new Date(event.id).toLocaleTimeString([], {
+                      hour12: false,
+                      minute: '2-digit',
+                      second: '2-digit'
                     })}]
                   </span>
                   <span className="message-type-tag">[{event.type?.toUpperCase()}]</span>
@@ -54,7 +60,6 @@ const EventLog = () => {
               </div>
             )}
           </AnimatePresence>
-          {/* Invisible element to anchor the scroll-to-bottom logic */}
           <div ref={logEndRef} />
         </div>
       </div>
