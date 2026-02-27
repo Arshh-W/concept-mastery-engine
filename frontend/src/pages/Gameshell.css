@@ -476,3 +476,51 @@
 .fb-dismiss:hover {
   color: rgba(255,255,255,0.7);
 }
+
+/* ─── Mission complete: two-button action row ────────────────────────────── */
+.mc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mc-next-btn {
+  background: color-mix(in srgb, var(--mc) 22%, rgba(0,0,0,0));
+  border: 1px solid color-mix(in srgb, var(--mc) 60%, transparent);
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--mc);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  font-family: inherit;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--mc) 14%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mc-next-btn:hover {
+  background: color-mix(in srgb, var(--mc) 32%, rgba(0,0,0,0));
+  transform: translateY(-1px);
+  box-shadow: 0 0 36px color-mix(in srgb, var(--mc) 24%, transparent);
+}
+
+/* Restyle old solo button to be secondary when paired */
+.mc-actions .mc-close-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.45);
+  box-shadow: none;
+  font-size: 13px;
+  padding: 10px 20px;
+}
+
+.mc-actions .mc-close-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  transform: none;
+}

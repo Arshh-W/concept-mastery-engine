@@ -55,6 +55,19 @@ const useGameStore1 = create(
           commandHistory: [],
         })),
 
+      // Called on every GameShell mount so replays start fresh
+      resetSession: () =>
+        set(() => ({
+          goals: [
+            { id: 1, text: "Allocate a memory block over 100MB", completed: false, xp: 40 },
+            { id: 2, text: "Allocate 3 different memory blocks",  completed: false, xp: 50 },
+            { id: 3, text: "Free a memory block successfully",    completed: false, xp: 30 },
+          ],
+          memory: { total: 1024, heapUsed: 0, blocks: [] },
+          currentEventLog: [],
+          commandHistory: [],
+        })),
+
       completeGoal: (goalId) => {
         const { goals, xp } = get();
         const goal = goals.find((g) => g.id === goalId);

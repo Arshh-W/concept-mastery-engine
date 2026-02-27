@@ -118,6 +118,21 @@ const useGameStore = create(
 
       clearHistory: () => set({ commandHistory: [] }),
 
+      // Called on every GameShell mount so replays start fresh
+      resetSession: () =>
+        set(() => ({
+          goals: [
+            { id: 1, text: "Insert keys to trigger a root split",        completed: false, xp: 50 },
+            { id: 2, text: "Perform a SELECT query with traversal highlight", completed: false, xp: 50 },
+            { id: 4, text: "Create a custom Production Database",         completed: false, xp: 75 },
+          ],
+          bTreeData: { id: "root", values: [50], children: null },
+          currentEventLog: [],
+          commandHistory: [],
+          highlightedNodes: [],
+          xp: 0,
+        })),
+
       setSelectedNode: (node) => set({ selectedNode: node }),
 
       completeGoal: (goalId) => {

@@ -74,6 +74,7 @@ const useProgressStore = create(
       totalXP: 0,
       streak: 0,
       lastActivityDate: null,
+      completedTopics: [],   // array of slug strings e.g. ["memory-management", "b-tree"]
       accuracyHistory: [],       // last 20 challenge results [{correct, total}]
       earnedBadges: [],          // badge ids
       
@@ -149,6 +150,13 @@ const useProgressStore = create(
       },
 
       clearPendingReward: () => set({ pendingReward: null }),
+
+      markTopicComplete: (slug) =>
+        set((state) => ({
+          completedTopics: state.completedTopics.includes(slug)
+            ? state.completedTopics
+            : [...state.completedTopics, slug],
+        })),
 
       _updateStreak: () => {
         const today = new Date().toDateString();

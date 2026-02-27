@@ -487,3 +487,78 @@
   margin-top: 8px;
   letter-spacing: 1px;
 }
+/* ─── Completed mission card ─────────────────────────────────────────────── */
+.mission-card--done {
+  border-color: rgba(0, 229, 255, 0.25) !important;
+  background: rgba(0, 229, 255, 0.04) !important;
+}
+.mission-card--done.mission-card--dbms {
+  border-color: rgba(168, 85, 247, 0.25) !important;
+  background: rgba(168, 85, 247, 0.04) !important;
+}
+
+/* Completed badge — DBMS variant */
+.certified--dbms {
+  color: #a855f7 !important;
+  border-color: #a855f7 !important;
+  background: rgba(168, 85, 247, 0.1) !important;
+  text-shadow: 0 0 5px #a855f7 !important;
+}
+
+/* ─── Completed topic row ────────────────────────────────────────────────── */
+.topic-row--done {
+  background: rgba(0, 229, 255, 0.06) !important;
+  border-bottom-color: rgba(0, 229, 255, 0.1) !important;
+}
+.topic-row--done.topic-row--dbms {
+  background: rgba(168, 85, 247, 0.06) !important;
+  border-bottom-color: rgba(168, 85, 247, 0.1) !important;
+}
+
+/* ─── Status dot completed ───────────────────────────────────────────────── */
+.status-dot--done {
+  background: #00e5ff !important;
+  box-shadow: 0 0 6px #00e5ff;
+}
+.status-dot--dbms {
+  background: #a855f7 !important;
+  box-shadow: 0 0 6px #a855f7;
+}
+
+/* ─── "✓ Done" badge on topic ────────────────────────────────────────────── */
+.topic-done-badge {
+  margin-left: 10px;
+  font-size: 0.65rem;
+  background: rgba(0, 229, 255, 0.1);
+  color: #00e5ff;
+  padding: 2px 7px;
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+}
+.topic-done-badge--dbms {
+  background: rgba(168, 85, 247, 0.1) !important;
+  color: #a855f7 !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
+}
+
+/* ─── Replay button variant ──────────────────────────────────────────────── */
+.launch-btn--replay {
+  border-color: #00e5ff !important;
+  color: #00e5ff !important;
+  background: rgba(0, 229, 255, 0.08) !important;
+}
+.launch-btn--replay:hover {
+  background: rgba(0, 229, 255, 0.18) !important;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3) !important;
+}
+.launch-btn--replay.launch-btn--replay-dbms {
+  border-color: #a855f7 !important;
+  color: #a855f7 !important;
+  background: rgba(168, 85, 247, 0.08) !important;
+}
+.launch-btn--replay.launch-btn--replay-dbms:hover {
+  background: rgba(168, 85, 247, 0.18) !important;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3) !important;
+}

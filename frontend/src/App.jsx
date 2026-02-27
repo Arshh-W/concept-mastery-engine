@@ -12,6 +12,7 @@ import Feedback from "./pages/Feedback.jsx";
 import Contact from "./pages/Contact.jsx";
 import Login from "./pages/Login.jsx";
 import GameShell from "./pages/Gameshell";
+import Dashboard from "./pages/Dashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
         {/* Protected routes — require auth */}
         <Route element={<ProtectedRoute />}>
