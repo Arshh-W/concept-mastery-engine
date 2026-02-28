@@ -396,3 +396,30 @@ def user_next(token_data):
         })
     finally:
         db.close()
+
+#Gemini failure feedback endpoint
+
+@game_bp.route("/feedback/failures", methods=["POST"])
+@require_auth
+def get_failure_feedback(token_data):
+    """
+    Called by the frontend after 2-3 consecutive command failures
+    """
+    data = request.get_json() or {}
+    try:
+        from services.feedback_service import feedback_service
+        fb = feedback_service.get_failure_feedback(
+            challenge_slug=data.get("challenge_slug", ""),
+            recent_failures=data.get("recent_failures", []),
+            sim_state=data.get("sim_state", {}),
+            goal=data.get("goal", {}),
+        )
+        return jsonify({
+            "message": fb.message,
+            "hint": fb.hint,
+            "concept_reminder": fb.concept_reminder,
+            "encouragement_level": fb.encouragement_level,
+            "suggested_command": fb.suggested_command,
+        })
+    except Exception as e:
+        return jsonify({"error": str(e), "message": "Keep trying! Check the goal panel for the exact condition."}), 500
