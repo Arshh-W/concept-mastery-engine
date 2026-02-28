@@ -645,3 +645,80 @@
   font-weight: 700;
 }
 .ti-cmd-desc { font-size: 11px; color: rgba(255,255,255,0.38); }
+
+/* ── Rich Gemini Feedback Banner ─────────────────────────────────────── */
+.fb-banner--rich {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 320px;
+  max-width: 420px;
+  padding: 14px 16px;
+  border-left: 3px solid #7c3aff;
+  background: rgba(10, 14, 22, 0.97);
+  border-radius: 12px;
+  border-top: 1px solid rgba(124,58,255,0.3);
+  border-right: 1px solid rgba(124,58,255,0.15);
+  border-bottom: 1px solid rgba(124,58,255,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(124,58,255,0.15);
+}
+
+.fb-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.fb-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #7c3aff;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  flex: 1;
+}
+
+.fb-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,170,0,0.06);
+  border: 1px solid rgba(255,170,0,0.2);
+  border-radius: 6px;
+  padding: 7px 10px;
+  width: 100%;
+}
+
+.fb-hint-icon { flex-shrink: 0; }
+
+.fb-cmd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.fb-cmd-label {
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+}
+
+.fb-cmd-code {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.25);
+  color: #00d4ff;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.fb-concept {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+}

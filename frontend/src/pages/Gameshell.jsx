@@ -13,7 +13,7 @@ import HintPanel from "../components/HintPanel";
 import useGameStore from "../store/useGameStore";
 import useGameStore1 from "../store/use1";
 import useProgressStore from "../store/useProgressStore";
-import apiClient from "../services/api";
+import apiClient, { gameApi } from "../services/api";
 import { getTopicConfig, SIMULATOR } from "../config/topicConfig";
 import "./Gameshell.css";
 
@@ -221,14 +221,39 @@ function CommandGuide({ commands, color }) {
   );
 }
 
-// ─── Auto-feedback Banner ─────────────────────────────────────────────────────
-function FeedbackBanner({ message, onDismiss }) {
-  useEffect(() => { const t = setTimeout(onDismiss, 9000); return () => clearTimeout(t); }, [onDismiss]);
+// ─── Gemini Feedback Banner (rich version) ────────────────────────────────────
+function FeedbackBanner({ feedback, message, onDismiss }) {
+  // feedback = { message, hint, concept, suggested, level } OR null (legacy)
+  const display = feedback || { message, hint: null, concept: null, suggested: null };
+  useEffect(() => { const t = setTimeout(onDismiss, 12000); return () => clearTimeout(t); }, [onDismiss]);
   return (
-    <motion.div className="fb-banner" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-      <span className="fb-icon">🤖</span>
-      <p className="fb-msg">{message}</p>
-      <button className="fb-dismiss" onClick={onDismiss}>✕</button>
+    <motion.div
+      className="fb-banner fb-banner--rich"
+      initial={{ opacity: 0, y: -24, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -20, scale: 0.97 }}
+    >
+      <div className="fb-header">
+        <span className="fb-icon">🤖</span>
+        <span className="fb-label">FLUX AI</span>
+        <button className="fb-dismiss" onClick={onDismiss}>✕</button>
+      </div>
+      <p className="fb-msg">{display.message}</p>
+      {display.hint && (
+        <div className="fb-hint">
+          <span className="fb-hint-icon">💡</span>
+          <span>{display.hint}</span>
+        </div>
+      )}
+      {display.suggested && (
+        <div className="fb-cmd">
+          <span className="fb-cmd-label">Try:</span>
+          <code className="fb-cmd-code">{display.suggested}</code>
+        </div>
+      )}
+      {display.concept && (
+        <div className="fb-concept">📖 {display.concept}</div>
+      )}
     </motion.div>
   );
 }
@@ -247,6 +272,10 @@ export default function GameShell() {
   const [feedbackMsg, setFeedbackMsg]   = useState(null);
   const completeFiredRef                = useRef(false);
   const feedbackCooldownRef             = useRef(false);
+  const sessionStartRef                 = useRef(Date.now());
+  const hadErrorsRef                    = useRef(false);
+  const usedHintsRef                    = useRef(false);
+  const [feedbackFull, setFeedbackFull] = useState(null); // { message, hint, concept, suggested_command }
 
   const sessionId   = useGameStore(s => s.sessionId);
   const dbmsGoals   = useGameStore(s => s.goals ?? []);
@@ -256,7 +285,9 @@ export default function GameShell() {
   const resetOS     = useGameStore1(s => s.resetSession);
   const resetDBMS   = useGameStore(s => s.resetSession);
 
-  const markTopicComplete = useProgressStore(s => s.markTopicComplete);
+  const markTopicComplete   = useProgressStore(s => s.markTopicComplete);
+  const awardLevelCompletion = useProgressStore(s => s.awardLevelCompletion);
+  const recordFailure        = useProgressStore(s => s.recordFailure);
 
   const goals   = domain === "os" ? osGoals   : dbmsGoals;
   const history = domain === "os" ? osHistory : dbmsHistory;
@@ -270,37 +301,98 @@ export default function GameShell() {
     else resetDBMS?.(module);
   }, [domain, module]);
 
-  // ── Completion detection ─────────────────────────────────────────────────
+  // ── Completion detection + XP award ────────────────────────────────────
   useEffect(() => {
     if (completeFiredRef.current) return;
     if (goals.length > 0 && goals.every(g => g.completed)) {
       completeFiredRef.current = true;
-      if (module) markTopicComplete(module);
+      const timeSeconds = Math.round((Date.now() - sessionStartRef.current) / 1000);
+      if (module) {
+        markTopicComplete(module);
+        awardLevelCompletion(module, {
+          hadErrors: hadErrorsRef.current,
+          usedHints: usedHintsRef.current,
+          timeSeconds,
+        });
+      }
       setTimeout(() => setShowComplete(true), 600);
     }
-  }, [goals, module, markTopicComplete]);
+  }, [goals, module, markTopicComplete, awardLevelCompletion]);
 
-  // ── Auto-feedback on 3 consecutive errors ────────────────────────────────
+  // ── Reset error/hint tracking on new topic ────────────────────────────
+  useEffect(() => {
+    hadErrorsRef.current  = false;
+    usedHintsRef.current  = false;
+    sessionStartRef.current = Date.now();
+  }, [domain, module]);
+
+  // ── Track failures for badge logic ────────────────────────────────────
+  useEffect(() => {
+    if (!history.length) return;
+    const last = history[history.length - 1];
+    if (last && ["failed","not found","invalid","error","unknown"].some(w => last.output?.toLowerCase().includes(w))) {
+      hadErrorsRef.current = true;
+      if (module) recordFailure(module);
+    }
+  }, [history, module, recordFailure]);
+
+  // ── Gemini-powered feedback after 2-3 consecutive failures ────────────
   const fetchAutoFeedback = useCallback(async () => {
     if (feedbackCooldownRef.current) return;
     feedbackCooldownRef.current = true;
+
+    const ERROR_WORDS = ["failed","not found","invalid","error","unknown","cannot","no contiguous"];
+    const recentFails = history.slice(-3).filter(
+      e => ERROR_WORDS.some(w => e.output?.toLowerCase().includes(w))
+    );
+
     try {
-      const res = await apiClient.get("/game/adaptive/hint", {
-        params: { session_token: sessionId || "", challenge_slug: module || "", hint_level: 1 },
+      // Build recent_failures payload for Gemini
+      const failurePayload = recentFails.map(e => ({
+        action: e.cmd || "",
+        error: e.output || "",
+      }));
+
+      const res = await gameApi.getFailureFeedback(
+        module || "",
+        failurePayload,
+        {}, // sim_state — extend later if sim exposes state
+        { description: config.terminalHint || "" },
+      );
+
+      const fb = res.data;
+      usedHintsRef.current = true;
+      setFeedbackFull({
+        message: fb.message,
+        hint: fb.hint,
+        concept: fb.concept_reminder,
+        suggested: fb.suggested_command,
+        level: fb.encouragement_level,
       });
-      setFeedbackMsg(res.data?.hint?.message || config.terminalHint);
+      setFeedbackMsg(fb.message); // keep legacy banner working too
     } catch {
-      setFeedbackMsg(`Tip: ${config.terminalHint}`);
+      // Fallback to adaptive hint endpoint
+      try {
+        const res = await apiClient.get("/game/adaptive/hint", {
+          params: { session_token: sessionId || "", challenge_slug: module || "", hint_level: 1 },
+        });
+        const msg = res.data?.hint?.message || config.terminalHint;
+        usedHintsRef.current = true;
+        setFeedbackMsg(msg);
+      } catch {
+        setFeedbackMsg(`Tip: ${config.terminalHint}`);
+      }
     }
     setTimeout(() => { feedbackCooldownRef.current = false; }, 30000);
-  }, [sessionId, module, config]);
+  }, [sessionId, module, config, history, recordFailure]);
 
   useEffect(() => {
-    if (history.length < 3) return;
+    if (history.length < 2) return;
+    const ERROR_WORDS = ["failed","not found","invalid","error","unknown","cannot","no contiguous"];
     const recentFails = history.slice(-3).filter(
-      e => ["failed","not found","invalid","error","unknown"].some(w => e.output?.toLowerCase().includes(w))
+      e => ERROR_WORDS.some(w => e.output?.toLowerCase().includes(w))
     );
-    if (recentFails.length >= 3) fetchAutoFeedback();
+    if (recentFails.length >= 2) fetchAutoFeedback();
   }, [history, fetchAutoFeedback]);
 
   const handleNext = () => {
@@ -323,7 +415,7 @@ export default function GameShell() {
         {showComplete && <MissionCompleteModal domain={domain} nextSlug={nextSlug} onClose={() => setShowComplete(false)} onNext={handleNext} />}
       </AnimatePresence>
       <AnimatePresence>
-        {feedbackMsg && <FeedbackBanner message={feedbackMsg} onDismiss={() => setFeedbackMsg(null)} />}
+        {(feedbackFull || feedbackMsg) && <FeedbackBanner feedback={feedbackFull} message={feedbackMsg} onDismiss={() => { setFeedbackMsg(null); setFeedbackFull(null); }} />}
       </AnimatePresence>
 
       <div className="game-container">

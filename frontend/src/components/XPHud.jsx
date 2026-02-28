@@ -97,13 +97,29 @@ function RewardPopup({ reward }) {
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       {reward.levelUp && (
-        <div className="reward-levelup">
-          <div className="reward-levelup-icon">{reward.levelUp.icon}</div>
-          <div>
-            <div className="reward-levelup-title">LEVEL UP!</div>
-            <div className="reward-levelup-name">{reward.levelUp.name}</div>
+        <motion.div
+          className="reward-levelup"
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: [0.7, 1.1, 1], opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="reward-levelup-icon" style={{ filter: `drop-shadow(0 0 16px ${reward.levelUp.color})` }}>
+            {reward.levelUp.icon}
           </div>
-        </div>
+          <div>
+            <div className="reward-levelup-title" style={{ color: reward.levelUp.color }}>
+              ⬆ LEVEL UP!
+            </div>
+            <div className="reward-levelup-name">{reward.levelUp.name}</div>
+            {reward.bonusXP && (
+              <div className="reward-levelup-bonus">+{reward.bonusXP} level bonus XP</div>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {reward.message && (
+        <div className="reward-message">{reward.message}</div>
       )}
 
       {reward.xp > 0 && (
@@ -117,14 +133,24 @@ function RewardPopup({ reward }) {
         </motion.div>
       )}
 
+      {reward.source === "level_complete" && !reward.levelUp && (
+        <div className="reward-source">Level Complete 🎯</div>
+      )}
+
       {badgeDetails?.map(badge => (
-        <div key={badge.id} className="reward-badge">
+        <motion.div
+          key={badge.id}
+          className="reward-badge"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <span className="reward-badge-icon">{badge.icon}</span>
           <div>
             <div className="reward-badge-name">{badge.name}</div>
             <div className="reward-badge-desc">{badge.desc}</div>
           </div>
-        </div>
+        </motion.div>
       ))}
     </motion.div>
   );
